@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مصفوفة الصلاحيات لشركة ايماك للمقاولات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .authority-tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            min-width: 30px;
+            text-align: center;
+            line-height: 1.1;
+        }
+        .authority-a { background-color: #d1fae5; color: #065f46; }
+        .authority-r { background-color: #fee2e2; color: #991b1b; }
+        .authority-fa { background-color: #cffafe; color: #0e7490; }
+        .authority-fr { background-color: #e0e7ff; color: #3730a3; }
+        .authority-c { background-color: #fde68a; color: #7c2d12; }
+        .authority-none { background-color: #e5e7eb; color: #4b5563; }
+        .authority-sig { background-color: #fef3c7; color: #92400e; }
+        .authority-sub { display: block; font-size: 0.72rem; opacity: 0.92; margin-top: 2px; }
+        .highlight-change {
+            background-color: #fef9c3 !important;
+        }
+        th, td {
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            vertical-align: middle;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f3f4f6;
+            z-index: 10;
+        }
+        .item-column {
+            width: 25%;
+            max-width: 320px;
+            white-space: normal;
+            text-align: right;
+        }
+        .serial-column {
+            width: 5%;
+        }
+        .role-column {
+            width: 8%;
+        }
+        .sub-indent {
+            padding-right: calc(var(--lvl, 0) * 1.25rem);
+            position: relative;
+        }
+        .sub-indent::before {
+            content: "";
+            position: absolute;
+            right: 0.4rem;
+            top: 0.9rem;
+            height: 2px;
+            width: calc(var(--lvl, 0) * 0.9rem);
+            background: #cbd5e1;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+        /* New Organizational Chart Styles */
+        .org-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            flex-grow: 1;
+            font-family: 'Cairo', sans-serif;
+            position: relative;
+        }
+        .position {
+            width: 220px;
+            min-height: 100px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            line-height: 1.4;
+            padding: 15px;
+            z-index: 2;
+        }
+        .position:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+        .shareholders {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+        }
+        .chairman {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+        }
+        .ceo {
+            background: linear-gradient(45deg, #4A90E2, #357ABD);
+        }
+        .executive-director {
+            background: linear-gradient(45deg, #5DADE2, #3498DB);
+        }
+        .cfao {
+            background: linear-gradient(45deg, #58D68D, #27AE60);
+        }
+        .employees {
+            background: linear-gradient(45deg, #AEB6BF, #85929E);
+        }
+        .level-2 {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+        }
+        .connection-line {
+            width: 2px;
+            height: 10px;
+            background: #333;
+            margin: 0 auto;
+        }
+        /* Fixed organizational chart lines */
+        .org-chart-connector {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .org-chart-connector::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 25px;
+            background: #333;
+        }
+        .org-chart-connector::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: calc(50% - 150px);
+            width: 300px;
+            height: 2px;
+            background: #333;
+        }
+        .org-chart-vertical-line {
+            position: absolute;
+            width: 2px;
+            height: 25px;
+            background: #333;
+            top: 0;
+        }
+        .org-chart-vertical-line.left {
+            right: calc(50% + 150px);
+        }
+        .org-chart-vertical-line.right {
+            left: calc(50% + 150px);
+        }
+        .employees-connector {
+            width: 2px;
+            height: 10px;
+            background: #333;
+            margin: 0 auto;
+        }
+        /* قيم مرِنة للّمسافات */
+        :root {
+            --org-gap: 10px;       /* نفس الـ gap بين الأسطر في .org-chart */
+            --emp-conn-h: 10px;    /* ارتفاع وصلة الموظفين */
+        }
+        /* توحيد الاسم المختلف لعنصر وصلة الموظفين */
+        .employees-connection, .employees-connector {
+            width: 2px;
+            height: var(--emp-conn-h);
+            background: #333;
+            margin: 0 auto;
+        }
+        /* الامتداد الرأسي من منتصف الخط الأفقي نزولًا حتى وصلة الموظفين */
+        .org-chart-connector { position: relative; }  /* موجود لديك، إبقِه */
+        .org-chart-connector .midline-down {
+            position: absolute;
+            top: 25px;                 /* يطابق موضع الخط الأفقي (::after) */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: calc(var(--org-gap) + var(--emp-conn-h));
+            background: #333;
+        }
+        /* ضبط الطباعة حتى يظل الاتساق صحيحًا */
+        @media print {
+            :root {
+                --org-gap: 5px;         /* لأنك تقلّل الارتفاعات في الطباعة */
+                --emp-conn-h: 8px;      /* يطابق إعداداتك في قسم الطباعة */
+            }
+            .org-chart-connector .midline-down { top: 20px; }
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        /* Print-specific Styles */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+            body {
+                background-color: #ffffff !important;
+                font-size: 8pt;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                counter-reset: page;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            header, #stats-section, #legend, #filter-section, #print-btn {
+                display: none !important;
+            }
+            #print-header, #print-footer {
+                display: block !important;
+            }
+            .page-number::before {
+                counter-increment: page;
+                content: "صفحة " counter(page);
+            }
+            h2, h3 {
+                font-size: 14pt;
+                padding-top: 0.5cm;
+                margin-bottom: 0.5cm;
+                text-align: center;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            .main-content {
+                width: 100%;
+                margin: 0 auto;
+                padding: 0;
+                box-shadow: none;
+                border: none;
+            }
+            #org-chart-container, #tables-container {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100%;
+                text-align: center;
+            }
+            #org-chart-container {
+                page-break-after: always;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                height: auto;
+                padding: 0.5cm 0 !important;
+            }
+            #tables-container h2 {
+                margin-top: 0;
+            }
+            .table-responsive {
+                overflow: visible !important;
+                display: block;
+            }
+            #r-and-r-table-container, .overflow-x-auto {
+                page-break-before: auto;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: auto;
+                page-break-inside: auto;
+            }
+            thead {
+                display: table-header-group;
+            }
+            thead tr {
+                page-break-inside: avoid;
+            }
+            th, td {
+                padding: 5px;
+                white-space: normal;
+                word-wrap: break-word;
+                font-size: 8pt;
+            }
+            #comparison-table .serial-column { width: 5% !important; }
+            #comparison-table .item-column { width: 25% !important; }
+            #comparison-table th, #comparison-table td { width: 8% !important; }
+            tr {
+                page-break-inside: avoid;
+            }
+            .authority-tag {
+                font-size: 0.7rem;
+                padding: 0.1rem 0.4rem;
+            }
+            /* Print styles for new org chart */
+            #org-chart-container .position {
+                min-height: 80px !important;
+                padding: 10px !important;
+                font-size: 14px !important;
+                box-shadow: none !important;
+                transform: none !important;
+                border: 2px solid #ccc;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            #org-chart-container .connection-line {
+                height: 8px !important;
+            }
+            #org-chart-container .org-chart-connector::before {
+                height: 20px !important;
+            }
+            #org-chart-container .org-chart-connector::after {
+                top: 20px !important;
+                width: 300px !important;
+            }
+            #org-chart-container .org-chart-vertical-line {
+                height: 20px !important;
+            }
+            .org-chart-vertical-line.right {
+                left: calc(50% + 150px) !important;
+            }
+            #org-chart-container .employees-connection {
+                height: 8px !important;
+            }
+            #org-chart-container .org-chart {
+                gap: 5px !important;
+            }
+            /* Removing the display:none rule for material icons to fix PDF export */
+            /* #org-chart-container .material-icons {
+                display: none;
+            } */
+            .connection-line, .org-chart-connector::before, .org-chart-connector::after, .org-chart-vertical-line, .employees-connection {
+                background: #333 !important;
+            }
+            #r-and-r-table-container, .overflow-x-auto {
+                box-shadow: none !important;
+            }
+
+            #abbreviations-legend {
+                page-break-before: always;
+            }
+
+        }
+        @media print {
+          .material-icons {
+            font-family: 'Material Icons' !important;
+          }
+        }
+        /* Roles & Responsibilities Table Styles */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-family: 'Tajawal', sans-serif;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background-color: #004d7a;
+            color: white;
+            text-align: center;
+            padding: 16px 12px;
+            font-size: 16px;
+            font-weight: 700;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        .comparison-table td {
+            padding: 16px 12px;
+            text-align: right;
+            vertical-align: top;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            white-space: normal !important;
+            word-wrap: break-word !important;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .comparison-table tr:hover {
+            background-color: #f0f9ff;
+        }
+        .position-title {
+            font-weight: 700;
+            color: #004d7a;
+            font-size: 16px;
+        }
+        .position-subtitle {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+        .task-item {
+            margin-bottom: 4px;
+            position: relative;
+            padding-right: 15px;
+            line-height: 1.5;
+        }
+        .task-item:before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #008080;
+            font-weight: bold;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #004d7a;
+            margin-bottom: 30px;
+            padding: 10px;
+            border-bottom: 2px solid #004d7a;
+        }
+        .table-container {
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Responsive adjustments */
+        @media screen and (max-width: 1200px) {
+            .item-column {
+                width: 30%;
+                max-width: 280px;
+            }
+            .role-column {
+                width: 9%;
+            }
+            .comparison-table th, .comparison-table td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+            .level-2 {
+                gap: 40px;
+            }
+            .org-chart-connector::after {
+                width: 240px;
+                left: calc(50% - 120px);
+            }
+            .org-chart-vertical-line.left {
+                right: calc(50% + 120px);
+            }
+            .org-chart-vertical-line.right {
+                left: calc(50% + 120px);
+            }
+        }
+        @media screen and (max-width: 992px) {
+            .item-column {
+                width: 35%;
+                max-width: 240px;
+            }
+            .role-column {
+                width: 10%;
+            }
+            th, td {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.8rem;
+            }
+            .comparison-table th, .comparison-table td {
+                padding: 10px 6px;
+                font-size: 12px;
+            }
+            .position {
+                width: 180px;
+                font-size: 14px;
+            }
+            .level-2 {
+                gap: 20px;
+            }
+            .org-chart-connector::after {
+                width: 180px;
+                left: calc(50% - 90px);
+            }
+            .org-chart-vertical-line.left {
+                right: calc(50% + 90px);
+            }
+            .org-chart-vertical-line.right {
+                left: calc(50% + 90px);
+            }
+        }
+        @media screen and (max-width: 768px) {
+            .item-column {
+                width: 40%;
+                max-width: 200px;
+            }
+            .role-column {
+                width: 12%;
+            }
+            th, td {
+                padding: 0.4rem 0.2rem;
+                font-size: 0.75rem;
+            }
+            .comparison-table th, .comparison-table td {
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+            .position {
+                width: 180px;
+                font-size: 14px;
+            }
+            .level-2 {
+                gap: 20px;
+            }
+            .org-chart-connector::after {
+                width: 120px;
+                left: calc(50% - 60px);
+            }
+            .org-chart-vertical-line.left {
+                right: calc(50% + 60px);
+            }
+            .org-chart-vertical-line.right {
+                left: calc(50% + 60px);
+            }
+        }
+        #abbreviations-legend-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        #abbreviations-legend-content > div {
+            background-color: #f0f9ff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Elements for Print Header -->
+    <div id="print-header" class="hidden">
+        <span id="print-title">مصفوفة الصلاحيات لشركة ايماك للمقاولات</span>
+        <span id="print-date-time"></span>
+    </div>
+    <div id="print-footer" class="hidden">
+        <span class="page-number"></span>
+    </div>
+    
+    <div class="main-content mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-700">مصفوفة الصلاحيات لشركة ايماك للمقاولات</h1>
+            <p class="mt-2 text-lg text-gray-600">قائمة البنود والصلاحيات</p>
+        </header>
+        <!-- Organizational Chart Section -->
+        <section id="org-chart-container" class="mb-12 p-6 bg-white rounded-lg shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 text-center mb-6" style="font-family: 'Cairo', sans-serif;">الهيكل التنظيمي (Organizational Structure)</h2>
+            <div class="org-chart">
+                <!-- المساهمون -->
+                <div class="position shareholders">
+                    <i class="material-icons position-icon">groups</i>
+                    <div>المالك / المساهمون</div>
+                    <div>(Shareholders)</div>
+                </div>
+                
+                <div class="connection-line"></div>
+                
+                <!-- رئيس مجلس الإدارة -->
+                <div class="position chairman">
+                    <i class="material-icons position-icon">chair</i>
+                    <div>رئيس مجلس الإدارة</div>
+                    <div>(Chairman of the Board)</div>
+                </div>
+                
+                <div class="connection-line"></div>
+                
+                <!-- المستوى الثاني -->
+                <div class="level-2">
+                    <div class="position executive-director">
+                        <i class="material-icons position-icon">account_balance</i>
+                        <div>المدير التنفيذي</div>
+                        <div>(Executive Director)</div>
+                    </div>
+                    
+                    <div class="position cfao">
+                        <i class="material-icons position-icon">analytics</i>
+                        <div>المدير المالي والإداري</div>
+                        <div>(CFO)</div>
+                    </div>
+                </div>
+                
+                <!-- خطوط الربط بين المديرين والموظفين -->
+                <div class="org-chart-connector">
+                    <div class="org-chart-vertical-line left"></div>
+                    <div class="org-chart-vertical-line right"></div>
+                    <span class="midline-down" aria-hidden="true"></span>
+                </div>
+                <div class="employees-connection"></div>
+                <!-- الموظفون -->
+                <div class="position employees">
+                    <i class="material-icons position-icon">people</i>
+                    <div>الموظفون</div>
+                    <div>(Employees)</div>
+                </div>
+            </div>
+        </section>
+        <!-- Roles and Responsibilities Section -->
+        <section id="r-and-r-table-container" class="mt-12 p-6 bg-white rounded-lg shadow-xl">
+            <div class="table-container">
+                <h2 class="section-title">📊 مقارنة الأدوار والمهام (Roles & Responsibilities Comparison)</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>المنصب (Arabic)</th>
+                            <th>Position (English)</th>
+                            <th>المستوى بالهيكل الإداري (Hierarchy Level)</th>
+                            <th>المهام الأساسية (Main Tasks)</th>
+                            <th>الصلاحيات (Authorities)</th>
+                            <th>التبعية (Reports To)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="position-title">رئيس مجلس الإدارة</div>
+                            </td>
+                            <td>
+                                <div class="position-title">Chairman of the Board</div>
+                            </td>
+                            <td>أعلى سلطة إشرافية / Top Supervisory Authority</td>
+                            <td>
+                                <div class="task-item">قيادة اجتماعات المجلس / Leads board meetings</div>
+                                <div class="task-item">وضع الرؤية والسياسات / Defines vision & policies</div>
+                                <div class="task-item">متابعة أداء الإدارة التنفيذية / Oversees executive performance</div>
+                                <div class="task-item">حماية مصالح المساهمين / Protects shareholders' interests</div>
+                            </td>
+                            <td>قرارات استراتيجية فقط / Strategic decisions only (not daily operations)</td>
+                            <td>المساهمون / Shareholders</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="position-title">العضو المنتدب (MD)</div>
+                            </td>
+                            <td>
+                                <div class="position-title">Managing Director (MD)</div>
+                            </td>
+                            <td>بين المجلس والإدارة / Between Board & Mgmt</td>
+                            <td>
+                                <div class="task-item">حلقة وصل بين المجلس والإدارة / Acts as link</div>
+                                <div class="task-item">تنفيذ قرارات المجلس / Implements board decisions</div>
+                                <div class="task-item">الإشراف على الاستراتيجية / Oversees strategic execution</div>
+                            </td>
+                            <td>صلاحيات تنفيذية واسعة / Wide executive powers (sometimes equal to CEO)</td>
+                            <td>مجلس الإدارة / Chairman / Board</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="position-title">المدير التنفيذي</div>
+                            </td>
+                            <td>
+                                <div class="position-title">Executive Director</div>
+                            </td>
+                            <td>تحت الرئيس التنفيذي / Under CEO</td>
+                            <td>
+                                <div class="task-item">قيادة قطاع محدد / Leads a department</div>
+                                <div class="task-item">تنفيذ الاستراتيجيات / Executes strategies in domain</div>
+                            </td>
+                            <td>صلاحيات داخل قطاعه فقط / Limited to department</td>
+                            <td>الرئيس التنفيذي / CEO</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="position-title">المدير المالي والإداري (CFAO)</div>
+                            </td>
+                            <td>
+                                <div class="position-title">Chief Financial & Administrative Officer (CFAO)</div>
+                            </td>
+                            <td>جزء من الفريق التنفيذي / Executive Team</td>
+                            <td>
+                                <div class="task-item">إدارة الشؤون المالية / Manages finances</div>
+                                <div class="task-item">إعداد الميزانيات والتقارير / Prepares budgets & reports</div>
+                                <div class="task-item">إدارة المخاطر المالية / Manages risks</div>
+                                <div class="task-item">إدارة الشؤون الإدارية / Manages admin functions</div>
+                                <div class="task-item">دعم العمليات الداخلية / Supports internal ops</div>
+                                <div class="task-item">تنظيم السياسات / Organizes policies</div>
+                            </td>
+                            <td>صلاحيات مالية وإدارية / Financial & administrative authority</td>
+                            <td>الرئيس التنفيذي / CEO</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- إحصائيات سريعة -->
+        <section id="stats-section" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div class="stats-card bg-white p-4 rounded-lg shadow-sm flex items-center">
+                <div class="bg-teal-100 p-3 rounded-full ml-4">
+                    <i class="fas fa-list-alt text-teal-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">إجمالي البنود</p>
+                    <p class="text-2xl font-bold" id="total-items">0</p>
+                </div>
+            </div>
+            <div class="stats-card bg-white p-4 rounded-lg shadow-sm flex items-center">
+                <div class="bg-amber-100 p-3 rounded-full ml-4">
+                    <i class="fas fa-layer-group text-amber-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">الفئات</p>
+                    <p class="text-2xl font-bold" id="total-categories">0</p>
+                </div>
+            </div>
+        </section>
+        <section id="legend" class="mb-8 p-4 bg-white rounded-lg shadow-sm">
+            <h2 class="text-xl font-bold mb-3 text-gray-700">مفتاح الاختصارات</h2>
+            <div class="flex flex-wrap gap-4">
+                <div class="flex items-center gap-2"><span class="authority-tag authority-a">A</span><span><b>الاعتماد (Approval)</b></span></div>
+                <div class="flex items-center gap-2"><span class="authority-tag authority-fa">FA</span><span><b>الموافقة الرسمية (القانونية) بعد الاعتماد (Final (Legal) Approval)</b></span></div>
+                <div class="flex items-center gap-2"><span class="authority-tag authority-c">C</span><span><b>الموافقة المبدئية (Concurrence)</b></span></div>
+                <div class="flex items-center gap-2"><span class="authority-tag authority-r">R</span><span><b>مراجعة / توصية (Review/Recommendation)</b></span></div>
+                <div class="flex items-center gap-2"><span class="authority-tag authority-fr">FR</span><span><b>توصية نهائية ترفع للمالك (Final Review for Owner)</b></span></div>
+                <div class="flex items-center gap-2"><span class="authority-tag authority-none">--</span><span><b>لا يوجد صلاحية</b></span></div>
+                <div class="flex items-center gap-2"><span class="authority-tag authority-sig">توقيع</span><span><b>توقيع (Signature)</b></span></div>
+            </div>
+        </section>
+        <!-- مفاتيح اختصارات الوظائف -->
+        <section id="abbreviations-legend" class="mb-8 p-4 bg-white rounded-lg shadow-sm">
+            <h2 class="text-xl font-bold mb-3 text-gray-700">مفاتيح اختصارات الوظائف</h2>
+            <div class="flex flex-wrap gap-4" id="abbreviations-legend-content">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </section>
+        <section id="filter-section" class="sticky-header py-4 mb-6 rounded-lg">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="w-full md:w-1/2">
+                    <div class="relative">
+                        <input type="text" id="search-input" placeholder="ابحث في البنود..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button id="print-btn" class="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition flex items-center gap-2">
+                        <i class="fas fa-print"></i>
+                        طباعة / تحميل PDF
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex flex-wrap gap-2" id="category-filters">
+                <!-- سيتم ملؤها بالجافاسكريبت -->
+            </div>
+        </section>
+        <main id="tables-container">
+            <!-- Tables will be generated here by JavaScript for web view -->
+        </main>
+    </div>
+    <script>
+        const ROLES_ORDER = ['owner', 'generalAssembly', 'chairman', 'board', 'cfo', 'legal_compliance', 'pm_dm'];
+        const ROLE_NAMES = {
+            owner: 'المالك',
+            generalAssembly: 'جمعية عادية / جمعية غير عادية',
+            chairman: 'رئيس مجلس الإدارة',
+            board: 'مجلس الإدارة',
+            cfo: 'مدير الشؤون المالية والإدارية / المدير المالى والادارى',
+            legal_compliance: 'الشئون القانونية / الرقابة',
+            pm_dm: 'مدير مشروعات / إدارات'
+        };
+        const DATA = [
+            // قانونية وتنظيمية
+            {"category":"قانونية وتنظيمية","serial":"1.1","item":"تأسيس شركة جديدة","owner":"A","generalAssembly":"","chairman":"R","board":"FA","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"2.1","item":"انتخاب أعضاء مجالس الإدارات وعزلهم","owner":"A","generalAssembly":"FA","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"3.1","item":"انتخاب رئيس مجلس الإدارة و تعيين المدير العام","owner":"A","generalAssembly":"","chairman":"","board":"FA","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"4.1","item":"تغيير الكيان القانوني للشركة","owner":"A","generalAssembly":"FA","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"5.1","item":"تصديق و إعلان توزيعات الأرباح","owner":"A","generalAssembly":"FA","chairman":"","board":"FR","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"6.1","item":"زيادة أو تخفيض رأس مال الشركة","owner":"A","generalAssembly":"FA","chairman":"FR","board":"FR","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"7.1","item":"تعديل عقد تأسيس الشركة أو النظام الأساسي","owner":"A","generalAssembly":"FA","chairman":"FR","board":"FR","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"8.1","item":"دخول مساهم / مساهمين جدد","owner":"A","generalAssembly":"FA","chairman":"","board":"FR","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"9.1","item":"تعيين مدققي الحسابات و تحديد أتعابهم","owner":"","generalAssembly":"FA","chairman":"A","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"10.1","item":"تصفية او اندماج شركة مع شركة أخرى او منشأة","owner":"A","generalAssembly":"FA","chairman":"","board":"FR","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"11.1","item":"اصدار / تعديل او منح مستويات الصلاحية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"11.1.1", "isSubItem": true, "item":"صلاحيات المدير التنفيذي و مدير الشؤون المالية والإدارية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"11.1.2", "isSubItem": true, "item":"صلاحيات المستوى الوظيفى الأدنى من المشار اليه أعلاه :","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"11.1.2.1", "isSubItem": true, "item":"وظائف الإدارة الفنية وأقسامها التابعة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"R(Control)","pm_dm":"R"},
+            {"category":"قانونية وتنظيمية","serial":"11.1.2.2", "isSubItem": true, "item":"وظائف الإدارة المالية والإدارية وأقسامها التابعة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"R(Control)","pm_dm":"R"},
+            {"category":"قانونية وتنظيمية","serial":"12.1","item":"المخولين بالتوقيع لدى البنوك","owner":"A","generalAssembly":"FA","chairman":"","board":"FR","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"13.1","item":"التوكيلات القانونية بصفة عامة","owner":"A","generalAssembly":"","chairman":"C","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"14.1","item":"توكيلات قانونية للمحاميين في إجراءات التقاضي","owner":"","generalAssembly":"","chairman":"A","board":"C","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"15.1","item":"توكيلات قانونية لإنجاز معاملات تشغيلية روتينية طرف الجهات الرسمية","owner":"","generalAssembly":"","chairman":"A","board":"C","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"16.1","item":"الإجراءات القانونية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"16.1.1", "isSubItem": true, "item":"- ضد الشركاء / المساهمين","owner":"A","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(Legal)"},
+            {"category":"قانونية وتنظيمية","serial":"16.1.2", "isSubItem": true, "item":"- ضد العملاء","owner":"","generalAssembly":"","chairman":"A","board":"C","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"16.1.3", "isSubItem": true, "item":"- ضد الشركات / الأفراد","owner":"","generalAssembly":"","chairman":"A","board":"C","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"16.1.4", "isSubItem": true, "item":"ضد كبار الموظفين (مديرو التنفيذ والشؤون المالية )","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"قانونية وتنظيمية","serial":"16.1.5", "isSubItem": true, "item":"- ضد الموظفين","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":"R(HR)"},
+            {"category":"قانونية وتنظيمية","serial":"17.1","item":"تعيين / إتفاقيات مع وكلاء أو كفلاء محليين","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            
+            // شؤون عامة
+            {"category":"شؤون عامة","serial":"2.1","item":"الشعار التجاري","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.1.1", "isSubItem": true, "item":"- تصميم شعار تجاري لكيانات جديدة","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.1.2", "isSubItem": true, "item":"- تعديل شعار تجاري لكيانات قائمة","owner":"A","generalAssembly":"","chairman":"C","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.2","item":"الهيكل التنظيمي","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.2.1", "isSubItem": true, "item":"الإدارة الرئيسية - الشركة","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.2.2", "isSubItem": true, "item":"شركة تابعة - فروع","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.2.3", "isSubItem": true, "item":"إدارات داخلية / مشروعات ( الفنية)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"C"},
+            {"category":"شؤون عامة","serial":"2.2.4", "isSubItem": true, "item":"إدارات داخلية / مشروعات ( المالية)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"C"},
+            {"category":"شؤون عامة","serial":"2.3","item":"إصدار التعميمات الإدارية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.4","item":"إصدار وتعديل نظم إجراءات لوائح والنماذج الداخلية للشركة","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.5","item":"الفصل في أي خلاف حول حدود الصلاحيات و السلطات","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.6","item":"إصدار التعليمات الداخلية (الأجازات المحلية)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.7","item":"تحديد مواعيد الدوام للشركة","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.7.1", "isSubItem": true, "item":"الإدارة الرئيسية - الشركة","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.8","item":"الإدلاء بالتصريحات و البيانات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.9","item":"تقييم أداء الشركات","owner":"A","generalAssembly":"","chairman":"C","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.10","item":"البت في النزاعات بين الشركات","owner":"A","generalAssembly":"","chairman":"","board":"FR","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.11","item":"إستراتيجيات الشركة","owner":"A","generalAssembly":"","chairman":"","board":"FR","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(CSO)"},
+            {"category":"شؤون عامة","serial":"2.12","item":"التأمين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.12.1", "isSubItem": true, "item":"إصدار وثائق تأمين ذات مفاهيم جديدة أو مختلفة","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R (Ins)"},
+            {"category":"شؤون عامة","serial":"2.12.2", "isSubItem": true, "item":"إصدار وثائق تأمين، تجديدها، تعديلها أو تغيير جهة التأمين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.12.2.1", "isSubItem": true, "item":"إدارة / المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PM)"},
+            {"category":"شؤون عامة","serial":"2.12.3", "isSubItem": true, "item":"المطالبات و التعويضات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PM/DM);C (INS)"},
+            {"category":"شؤون عامة","serial":"2.13","item":"إيجارات (أراضي / سكن / مكاتب)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.13.1", "isSubItem": true, "item":"- أراضي / مباني المكاتب","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.13.2", "isSubItem": true, "item":"سكن العمال","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":"R(PM)"},
+            {"category":"شؤون عامة","serial":"2.13.3", "isSubItem": true, "item":"مكاتب الموقع/ اراضى للوحدات الخدمية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":"R(PM)"},
+            {"category":"شؤون عامة","serial":"2.14","item":"إصدار العهد المستديمة والمؤقتة","owner":"","generalAssembly":"","chairman":"A ما يزيد عن صلاحية المدير التنفيذي","board":"","cfo":"A\n10000KD","legal_compliance":"","pm_dm":"R(DM)"},
+            {"category":"شؤون عامة","serial":"2.15","item":"أتعاب الخدمات المهنية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.15.1", "isSubItem": true, "item":"- أتعاب قانونية","owner":"","generalAssembly":"","chairman":"A ما يزيد عن صلاحية المدير التنفيذي","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.15.2", "isSubItem": true, "item":"- أتعاب شهادات الجودة / السلامة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.16","item":"كتب للسفارات لاستخراج تأشيرات (لأغراض العمل فقط)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"شؤون عامة","serial":"2.17","item":"إشتراكات جرائد / مجلات متخصصة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.18","item":"علاقات عامة (ضيافة، هدايا صغيرة)","owner":"","generalAssembly":"","chairman":"A ما يزيد عن صلاحية المدير التنفيذي","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.19","item":"اعلانات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.19.1", "isSubItem": true, "item":"- تطوير الأعمال","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.19.2", "isSubItem": true, "item":"- تنشيط المبيعات / حملات تسويقية","owner":"","generalAssembly":"","chairman":"A ما يزيد عن صلاحية المدير التنفيذي","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.19.3", "isSubItem": true, "item":"- التوظيف","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.20","item":"تبرعات (سنوية)","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.21","item":"تحديد مكافآت أعضاء مجلس الإدارة","owner":"A","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.22","item":"شراء أو بيع أسهم أو رهنها","owner":"A","generalAssembly":"","chairman":"R","board":"FR","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.23","item":"تسهيلات بنكية وقروض","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.23.1", "isSubItem": true, "item":"- تسهيلات بنكية و قروض غير محددة الغرض","owner":"","generalAssembly":"","chairman":"R","board":"FR","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.23.2", "isSubItem": true, "item":"- تسهيلات بنكية (تمويل المشروعات، عمليات تجارية محددة)","owner":"","generalAssembly":"","chairman":"A","board":"FA","cfo":"C(CFO)","legal_compliance":"R(Legal)","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.24","item":"التمويل الداخلي للمجموعة","owner":"A","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.25","item":"معدل الفائدة الداخلية على الحسابات الجارية وحسابات الشركاء","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.26","item":"تحديد سعر تحويل الصرف الأجنبي للأغراض المحاسبية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"شؤون عامة","serial":"2.27","item":"المصروفات العامة","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.28","item":"قبول كفالات بنكية مشروطة من الآخرين","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"شؤون عامة","serial":"2.29","item":"توقيع عقود تضمن شرط التحكيم الدولي","owner":"A","generalAssembly":"","chairman":"C","board":"","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":"R(Tender)"},
+            
+            // إدارة الأفراد
+            {"category":"إدارة الأفراد","serial":"3.1","item":"تعيين موظفين جدد / انهاء خدمات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.1.1", "isSubItem": true, "item":"مديرو التنفيذ ومديرو الشئون المالية والإدارية","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.1.2", "isSubItem": true, "item":"الإدارة الفنية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.1.2.1", "isSubItem": true, "item":"مديرين الإدارات / المشروعات / العمليات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.1.2.2", "isSubItem": true, "item":"وظائف اشرافية أخرى","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.1.2.3", "isSubItem": true, "item":"باقى الوظائف","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.1.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.1.3.1", "isSubItem": true, "item":"مديرو الإدارات المالية والوظائف الاشرافية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.1.3.2", "isSubItem": true, "item":"باقى وظائف الإدارات المالية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.1.4", "isSubItem": true, "item":"عمالة يومية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"إدارة الأفراد","serial":"3.1.5", "isSubItem": true, "item":"تعيين موظفين ذو صلة قرابة للعاملين بشركات المجموعة","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.2","item":"إعادة تعيين اى موظف شهرى سبق استقالته / انهاء خدماتة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.2.1", "isSubItem": true, "item":"مدير تنفيذى / مدير مشروع / مدير مالى / مدير إدارة","owner":"","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.2.2", "isSubItem": true, "item":"اقل من مدير تنفيذى / مدير مشروع / مدير مالى / مدير إدارة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.2.3", "isSubItem": true, "item":"عمالة يومية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.3","item":"فيزا زيارة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.3.1", "isSubItem": true, "item":"لأغراض العمل الرئيسية / التوظيف","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.3.2", "isSubItem": true, "item":"لأغراض لا تتعلق بالعمل (غير رسمية) او التوظيف","owner":"A","generalAssembly":"","chairman":"C","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.4","item":"فيزا عمل","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.5","item":"توقيع عقود التوظيف","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.6","item":"هيكل درجات العمالة الشهرية","owner":"A","generalAssembly":"","chairman":"C","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.7","item":"معدلات أجور العمالة اليومية (المشروعات)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.8","item":"الزيادات، الترقيات، تعديل المسميات والدرجات الوظيفية والمزايا","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.8.1", "isSubItem": true, "item":"مديرو التنفيذ و مديرو الشئون المالية والإدارية","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.8.2", "isSubItem": true, "item":"عمالة شهرية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.8.2.1", "isSubItem": true, "item":"الإدارة الفنية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.8.2.2", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.8.3", "isSubItem": true, "item":"- عمالة يومية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.9","item":"المكافآت","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.9.1", "isSubItem": true, "item":"- مكافآت الأداء السنوية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.9.1.1", "isSubItem": true, "item":"-- مديرو التنفيذ ومديرو الشؤون المالية والإدارية","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.9.1.2", "isSubItem": true, "item":"-- الإدارة الفنية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.9.1.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.9.2", "isSubItem": true, "item":"- مكافآت الأداء ربع السنوية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.9.2.1", "isSubItem": true, "item":"-- الإدارة الفنية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(DM);R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.9.2.2", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.10","item":"نظام الحافز النقدي للمشروعات (لزيادة إنتاجية المواقع)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS);R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.11","item":"معايير نظام الحافز النقدى للمشروعات (لزيادة إنتاجية المواقع)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS);R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.12","item":"سيارات ممنوحة من الشركة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.12.1", "isSubItem": true, "item":"مشروعات يدخل ضمن تسعيرها تسليم سيارات لبعض الموظفين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.12.1.1", "isSubItem": true, "item":"سيارات الدفع الرباعى","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PM)"},
+            {"category":"إدارة الأفراد","serial":"3.12.1.2", "isSubItem": true, "item":"سيارات أخرى بخلاف الدفع الرباعى","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PM)"},
+            {"category":"إدارة الأفراد","serial":"3.12.2", "isSubItem": true, "item":"مشروعات لا يدخل ضمن تسعيرها تسليم سيارات لبعض الوظائف","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.12.2.1", "isSubItem": true, "item":"بيك اب / باص صغير مع سائق","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"إدارة الأفراد","serial":"3.12.3", "isSubItem": true, "item":"الإدارات ومراكز المسئولية الأخرى","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.12.3.1", "isSubItem": true, "item":"مديرو التنفيذ و مديرو الشئون المالية والإدارية","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.12.3.2", "isSubItem": true, "item":"فئات مستحقة طبقا لهيكل المزايا او طبيعة الوظيفة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.12.3.3", "isSubItem": true, "item":"الإدارة الفنية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.12.3.4", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO) باقى وظائف الإدارة المالية","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.12.3.5", "isSubItem": true, "item":"الفئات غير المستحقة","owner":"A","generalAssembly":"","chairman":"FR","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.13","item":"استخدام سيارات لأغراض مؤقتة (بحد أقصى شهرين)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"إدارة الأفراد","serial":"3.14","item":"بدل وقود","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"إدارة الأفراد","serial":"3.15","item":"خطوط هاتف محمول","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.15.1", "isSubItem": true, "item":"محلى تحديد حد اقصى لمبلغ الفاتورة طبقا للهيكل المعتمد من المالك","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"إدارة الأفراد","serial":"3.15.2", "isSubItem": true, "item":"دولى وخدمات انترنت وتجوال","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"إدارة الأفراد","serial":"3.15.2.1", "isSubItem": true, "item":"موظفي الدرجات الأدنى من مديرين الادارت والمشروعات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"إدارة الأفراد","serial":"3.16","item":"بدل الوقت الإضافي للعمالة اليومية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PM)\nR(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.17","item":"الأجازات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.1", "isSubItem": true, "item":"مديرو التنفيذ ومديرو الشئون المالية والإدارية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.2", "isSubItem": true, "item":"- الإدارة الفنية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.2.1", "isSubItem": true, "item":"مديرو التنفيذ","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.2.2", "isSubItem": true, "item":"مديرو الإدارات / المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.2.3", "isSubItem": true, "item":"وظائف إشرافية وأخرى","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(DM)"},
+            {"category":"إدارة الأفراد","serial":"3.17.2.4", "isSubItem": true, "item":"باقى وظائف الإدارة الفنية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(DM / PM)"},
+            {"category":"إدارة الأفراد","serial":"3.17.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.3.1", "isSubItem": true, "item":"مديرو الإدارات المالية والإدارية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.3.2", "isSubItem": true, "item":"باقى  وظائف الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.18","item":"ماموريات سفر","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.18.1", "isSubItem": true, "item":"مديرو التنفيذ ومديرو الشئون المالية والإدارية / المدير المالى والادارى","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.18.2", "isSubItem": true, "item":"الإدارة الفنية والاقسام التابعه لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.18.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.18.4", "isSubItem": true, "item":"حضور دورات تدريبية، ندوات ومؤتمرات (خارجية)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.19","item":"دفعة نقدية مقدمة للموظف (عند الالتحاق بالعمل)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.19.1", "isSubItem": true, "item":"العمالة الشهرية ( العمالة المنتظمة وعقود توريد العمالة )","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.19.2", "isSubItem": true, "item":"العمالة اليومية ( العمالة المنتظمة وعقود توريد العمالة )","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.19.3", "isSubItem": true, "item":"- العمالة المختصة بإغلاق المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.20","item":"تسجيل بالتأمينات الإجتماعية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.21","item":"كفالات بنكية عمالية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.22","item":"كروت العمل","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            
+            // الأصول الثابتة
+            {"category":"الأصول الثابتة","serial":"4.1","item":"النفقات الرأسمالية والأصول الثابتة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"الأصول الثابتة","serial":"4.1.1", "isSubItem": true, "item":"الات ومعدات سيارات تراكمى سنويا على مستوى النشاط","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD) \nR (PCS)"},
+            {"category":"الأصول الثابتة","serial":"4.1.2", "isSubItem": true, "item":"- عدد يدوية وكهربائية، معدات مكتبية وحاويات تخزين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PD/PM)"},
+            {"category":"الأصول الثابتة","serial":"4.1.3", "isSubItem": true, "item":"- كبائن مكتبية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PD), R(PM), R(DM)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4", "isSubItem": true, "item":"- أثاث مكتبي","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"الأصول الثابتة","serial":"4.1.4.1", "isSubItem": true, "item":"-- مشروعات","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PM),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4.2", "isSubItem": true, "item":"استراحات / سكن عمال ومعدات بيها معدات المغسلة وأجهزة لياقة بدنية ووحدات  تكييف","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4.3", "isSubItem": true, "item":"-- مراكز مسؤولية أخرى (خاصة بنشاط المقاولات)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"الأصول الثابتة","serial":"4.1.4.3.1", "isSubItem": true, "item":"مقرات رئيسية جديدة  والخدمات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4.3.2", "isSubItem": true, "item":"المقرات الرئيسية القائمة والخدمات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(OFFICE SERVICES)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4.3.3", "isSubItem": true, "item":"توسعة لمقرات رئيسية والخدمات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"الأصول الثابتة","serial":"4.1.4.4", "isSubItem": true, "item":"- معدات تكنولوجيا المعلومات","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(IT),R(PD),R(PCS)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4.5", "isSubItem": true, "item":"- معدات الفحص / المعايرة","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(QA),R(PD),R(PCS)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4.6", "isSubItem": true, "item":"سقالات (تراكمي ثانوي)","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PD),R(PCS)"},
+            {"category":"الأصول الثابتة","serial":"4.1.4.7", "isSubItem": true, "item":"- أراضي / مباني / تركيبات ثابتة","owner":"A","generalAssembly":"","chairman":"FR","board":"FR","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R"},
+            {"category":"الأصول الثابتة","serial":"4.2","item":"استبعادات الأصول الثابتة (بالقيمة الشرائية)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"الأصول الثابتة","serial":"4.2.1", "isSubItem": true, "item":"- آلات، معدات وسيارات","owner":"A","generalAssembly":"","chairman":"FR","board":"FR","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.2", "isSubItem": true, "item":"العدد اليدوية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.3", "isSubItem": true, "item":"كبائن المكاتب","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.4", "isSubItem": true, "item":"اثاث مكتبي/معدات واكسسوارات/حاويات تخزين","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.5", "isSubItem": true, "item":"- معدات تكنولوجيا المعلومات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.6", "isSubItem": true, "item":"معدات الفحص / المعايرة","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.7", "isSubItem": true, "item":"سقالات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.8", "isSubItem": true, "item":"- أراضي / مباني / تركيبات ثابتة","owner":"A","generalAssembly":"","chairman":"FR","board":"FR","cfo":"R(CFO)","legal_compliance":"","pm_dm":""},
+            {"category":"الأصول الثابتة","serial":"4.3","item":"الشطب من الدفاتر للأصول المفقودة بعد اجراء التحقيقات اللازمة وتحديد المتسبب بموجب مذكرة رسمية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"الأصول الثابتة","serial":"4.3.1", "isSubItem": true, "item":"- آلات، معدات وسيارات","owner":"A","generalAssembly":"","chairman":"FR","board":"FR","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.3.2", "isSubItem": true, "item":"العدد اليدوية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.3.3", "isSubItem": true, "item":"كبائن المكاتب","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.3.4", "isSubItem": true, "item":"اثاث مكاتب /معدات واكسسوارات وحاويات تخزيين","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.3.5", "isSubItem": true, "item":"- معدات تكنولوجيا المعلومات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.3.6", "isSubItem": true, "item":"معدات الفحص / المعايرة","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.3.7", "isSubItem": true, "item":"سقالات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            
+            // تدبير المواد / استبعادها (عدا الأصول الثابتة)
+            {"category":"تدبير المواد / استبعادها (عدا الأصول الثابتة)","serial":"5.1","item":"تقييم الموردين (لإدراجهم ضمن قائمة المعتمدين)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"A(PD)"},
+            {"category":"تدبير المواد / استبعادها (عدا الأصول الثابتة)","serial":"5.2","item":"استبعاد / إعادة إدراج موردين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PD)"},
+            {"category":"تدبير المواد / استبعادها (عدا الأصول الثابتة)","serial":"5.3","item":"المشتريات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"تدبير المواد / استبعادها (عدا الأصول الثابتة)","serial":"5.3.1", "isSubItem": true, "item":"تعهدات الشراء","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PD)"},
+            {"category":"تدبير المواد / استبعادها (عدا الأصول الثابتة)","serial":"5.3.2", "isSubItem": true, "item":"طلبات المواد (لبنود المستهلكات ثانوية القيمة)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"A"},
+            {"category":"تدبير المواد / استبعادها (عدا الأصول الثابتة)","serial":"5.4","item":"استبعاد السكراب","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PD)"},
+            {"category":"تدبير المواد / استبعادها (عدا الأصول الثابتة)","serial":"5.5","item":"التسويات الجردية (عجز / زيادة)","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":"R(PD)"},
+            // أوامر الشراء
+            {"category":"أوامر الشراء","serial":"6.1","item":"إصدار أوامر الشراء بما في ذلك تعديلاتها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"R(Control)","pm_dm":"A(PD/PM)\n50.000KD"},
+            {"category":"أوامر الشراء","serial":"6.2","item":"دفعات مقدمة بدون كفالات بنكية","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PD)"},
+            // إيجار المعدات
+            {"category":"إيجار المعدات","serial":"7.1","item":"حيث تتوافر إدارة معدات (صيانة)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إيجار المعدات","serial":"7.1.1", "isSubItem": true, "item":"اتفاقيات تأجير معدات مملوكة للشركة الي اطراف خارجية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)\nR(ED)"},
+            {"category":"إيجار المعدات","serial":"7.1.2", "isSubItem": true, "item":"اتفاقيات تاجير معدات من أخريين مع اتفاقيات صيانة","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
+            {"category":"إيجار المعدات","serial":"7.2","item":"حيث لا تتوافر إدارة معدات ( صيانة )","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إيجار المعدات","serial":"7.2.1", "isSubItem": true, "item":"اتفاقيات لتاجير معدات من أخريين مع اتفاقيات صيانة  لكل عقد على حدا","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
+            {"category":"إيجار المعدات","serial":"7.3","item":"دفعات مقدمة بدون كفالات بنكية (من خلال اتفاقيات)","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
+            // الدراسات الأولية
+            {"category":"الدراسات الأولية","serial":"8.1","item":"الدراسات الأولية للمشروعات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"الدراسات الأولية","serial":"8.1.1", "isSubItem": true, "item":"الدراسات الأولية الاصلية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":"R(PCS),R(Tenders)"},
+            {"category":"الدراسات الأولية","serial":"8.1.2", "isSubItem": true, "item":"تعديلات الدراسة الأولية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"الدراسات الأولية","serial":"8.1.2.1", "isSubItem": true, "item":"طلب تعديل الدراسة الأولية (تعديل داخلى) بدون تغيير مجمل الربح او الطؤارى","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS),R(Tenders)"},
+            {"category":"الدراسات الأولية","serial":"8.1.2.2", "isSubItem": true, "item":"طلب تعديل الدراسة الأولية بما يؤثر بالسالب علي مجمل الربح","owner":"A\nABOVE\n25%","generalAssembly":"","chairman":"A\n25%","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS),R(Tenders)"},
+            {"category":"الدراسات الأولية","serial":"8.1.2.3", "isSubItem": true, "item":"طلب تعديل الدراسة الأولية (تغيير خارجى تحت التفاوض)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(PCS)"},
+            {"category":"الدراسات الأولية","serial":"8.2","item":"الخطة السنوية","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
+            // التعاقدات
+            {"category":"التعاقدات","serial":"9.1","item":"سابقة التأهيل المقدمة للعملاء","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(BD)"},
+            {"category":"التعاقدات","serial":"9.2","item":"طلب مستندات المناقصة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(BD)"},
+            {"category":"التعاقدات","serial":"9.3","item":"قرار تسعير المناقصة","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"التعاقدات","serial":"9.3.1", "isSubItem": true, "item":"التقدم بعطاء / عدم التقدم بعطاء","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":"R(BD)"},
+            {"category":"التعاقدات","serial":"9.3.2", "isSubItem": true, "item":"خطابات للجهات للانسحاب من العطاء","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":"R(BD)"},
+            {"category":"التعاقدات","serial":"9.4","item":"اتفاقيات ما قبل العطاء مع العملاء الشركاء او أخريين مذكرات التفاهم اتفاقيات الاستشارات للحصول علي عقود جديدة اتفاقيات الاستشارات الشخصية الوكالات الحصرية اتفاقيات الاتحاد اتفاقيات عدم الإفصاح اتفاقيات الاتحاد التضامني و اتفاقيات المشروعات المشتركة","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"R(Legal)","pm_dm":"R(BD)"},
+            {"category":"التعاقدات","serial":"9.5","item":"الدراسات والعروض","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.5.1", "isSubItem": true, "item":"- ملخص العروض","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.5.2", "isSubItem": true, "item":"- العروض / المناقصات (التقديم الرسمي)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.6","item":"- خطابات للجنة المناقصات المركزية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.7","item":"توقيع العقود","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"التعاقدات","serial":"9.7.1", "isSubItem": true, "item":"مع العملاء","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.7.2", "isSubItem": true, "item":"تعديلات العقود مع العملاء","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_legal_compliance":"","pm_dm":"R(Tenders)\nR(PCS)"},
+            {"category":"التعاقدات","serial":"9.8","item":"الكفالات البنكية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"التعاقدات","serial":"9.8.1", "isSubItem": true, "item":"الكفالات البنكية العطاء الاولي","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.8.2", "isSubItem": true, "item":"كفالات بنكية بعد مرحلة الترسية","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":""},
+            {"category":"التعاقدات","serial":"9.8.2.1", "isSubItem": true, "item":"كفالات الإنجاز","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.8.2.2", "isSubItem": true, "item":"كفالات الدفعات المقدمة","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.8.2.3", "isSubItem": true, "item":"كفالات اخري","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.9","item":"كفالات بنكية بدون تاريخ نهاية /مشروطة بصياغة خاصة","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R (CFO)","legal_compliance":"R(Legal)","pm_dm":"R(TENDERS)"},
+            {"category":"التعاقدات","serial":"9.10","item":"شطب الديون من الدفاتر ومنح خصم على الأرصدة المدينة","owner":"A\nABOVE20%","generalAssembly":"","chairman":"A 20%","board":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(DM)"},
+            // مقاولي الباطن / اتفاقيات
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.1","item":"تأهيل  مقاولي الباطن / مقاولين لادراجهم في قائمة مقاولى الباطن المعتمدين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"A(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.2","item":"تقييم  مقاولي الباطن / مقاولين لادراجهم في قائمة مقاولى الباطن المعتمدين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"A(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.3","item":"استبعاد / إعادة إدراج مقاولي الباطن / المقاولين","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4","item":"اتفاقيات مقاوليين الباطن والتوريد واوامر الخدمة وتعديلاتها ,اتفاقيات اعمال متنوعة اتفاقيات خدمات الاستشارات واتفاقيات الخدمات الهندسية","owner":"","generalAssembly":"","chairman":"A ما يزيد عن صلاحية المدير التنفيذي","board":"","cfo":"","legal_compliance":"","pm_dm":"R(PM),R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1", "isSubItem": true, "item":"منح وتوقيع اتفاقيات مقاولي الباطن وتعديلاتها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"A(BM)\nR(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1.1", "isSubItem": true, "item":"اعمال صغيرة (الاتفاقيات بحد اقصي 10 الاف د.ك او مايعادلها)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"A(BM)\nR(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1.2", "isSubItem": true, "item":"اعمال متوسطة اتفاقيات بما يزيد عن(10 آلاف - 100 ألف د.ك)","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"","legal_compliance":"","pm_dm":"R(PM),R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1.3", "isSubItem": true, "item":"اعمال كبيرة اتفاقيات بما يزيد عن 100 الف د.ك","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"","legal_compliance":"","pm_dm":"R(PM),R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.2", "isSubItem": true, "item":"منح وتوقيع أمر خدمة وتعديلاته","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.2.1", "isSubItem": true, "item":"- بحد أقصى 10 آلاف د.ك","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"A(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.2.2", "isSubItem": true, "item":"- ما يزيد عن 10 آلاف د.ك (حتى 50 ألف د.ك)","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":"R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.3", "isSubItem": true, "item":"دفعات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(DM/BM);R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.3.1", "isSubItem": true, "item":"مرحلية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(DM/BM);R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.3.2", "isSubItem": true, "item":"نهائية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"A(DM/BM)\nR(PCS/FAM)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.4", "isSubItem": true, "item":"دفعات مقدمة بدون كفالات بنكية من خلال الاتفاقيات","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5","item":"اتفاقيات اعمال متنوعة اتفاقيات خدمات الاستشارات واتفاقيات الخدمات الهندسية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.1", "isSubItem": true, "item":"منح وتوقيع الاتفاقيات وتعديلاتها","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.1.1", "isSubItem": true, "item":"المشروعات","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)\nA(BM)\n25.000KD"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.1.2", "isSubItem": true, "item":"الادارت","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)\nA(DM)\n25.000KD"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.2", "isSubItem": true, "item":"الدفعات","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.2.1", "isSubItem": true, "item":"مرحلية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"A(DM/BM)\nR(PCS/FAM)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.2.2", "isSubItem": true, "item":"نهائية","owner":"","generalAssembly":"","chairman":"","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"A(DM/BM)\nR(PCS/FAM)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.3", "isSubItem": true, "item":"دفعات مقدمة بدون كفالات بنكية من خلال الاتفاقيات","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.6","item":"الأعمال الداخلية غير المعتمدة للإنشاءات","owner":"","generalAssembly":"","chairman":"A","board":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)"}
+        ];
+        
+        const ABBREVIATIONS_LEGEND = {
+            "LEGAL": "مكتب لؤى جاسم الخرافى للمحاماة والاستشارات القانونية",
+            "CFO": "نائب المدير العام للشئون المالية والبنوك",
+            "CONTROL": "الرقابة المالية والإدارية",
+            "FAM": "المدير المالى",
+            "HR": "الموارد البشرية",
+            "CSO": "مدير إدارة الاستراتيجية والمعاملات",
+            "DM": "مدير إدارة",
+            "PM": "مدير المشروع",
+            "EM": "المدير التنفيذي",
+            "INS": "التامين",
+            "TENDER": "إدارة الدراسات",
+            "PCS": "إدارة مراقبة المشروعات",
+            "PD": "إدارة المشتريات",
+            "ED": "إدارة المعدات",
+            "IT": "إدارة تكنولوجيا المعلومات",
+            "QA": "ادارة مراقبة الجودة"
+        };
+        const ALL_CATEGORIES = [...new Set(DATA.map(d => d.category))];
+        let currentCategory = 'all';
+        let searchTerm = '';
+        const tablesContainer = document.getElementById('tables-container');
+        const categoryFilters = document.getElementById('category-filters');
+        const searchInput = document.getElementById('search-input');
+        const printBtn = document.getElementById('print-btn');
+        function badgeClass(code) {
+            switch (code) {
+                case 'A': return 'authority-a';
+                case 'R': return 'authority-r';
+                case 'C': return 'authority-c';
+                case 'FA': return 'authority-fa';
+                case 'FR': return 'authority-fr';
+                default: return 'authority-none';
+            }
+        }
+        
+        function splitParts(raw) {
+            if (!raw) return [];
+            const normalized = String(raw).replace(/\r/g, '').replace(/\s*\n\s*/g, '\n').trim();
+            const lines = normalized.split('\n').filter(Boolean);
+            const parts = [];
+            for (const line of lines) {
+                const chunks = line.split(/[,،;؛]+/).map(s => s.trim()).filter(Boolean);
+                parts.push(...chunks);
+            }
+            return parts;
+        }
+        function renderOneToken(tok) {
+            if (/توقيع\s+منفرد/.test(tok) || /توقيع\s+مزدوج/.test(tok)) {
+                return `<span class="authority-tag authority-sig">${tok}</span>`;
+            }
+            const m = tok.match(/^\s*([A-Z]{1,2})\b/);
+            if (!m) {
+                return `<span class="authority-tag authority-none">${tok}</span>`;
+            }
+            const code = m[1].toUpperCase();
+            const klass = badgeClass(code);
+            const subs = [];
+            tok.replace(/\(([^\)]+)\)/g, (_, g1) => {
+                subs.push(g1.trim());
+                return '';
+            });
+            const remainder = tok.replace(/^\s*[A-Z]{1,2}\b/, '').replace(/\([^\)]*\)/g, '').trim();
+            let html = `<span class="authority-tag ${klass}">${code}</span>`;
+            if (subs.length) {
+                html += subs.map(s => `<span class="authority-sub">(${s})</span>`).join('');
+            }
+            if (remainder) {
+                html += `<span class="authority-sub">${remainder}</span>`;
+            }
+            return html;
+        }
+        function renderAuthorityCell(raw) {
+            if (!raw || String(raw).trim() === '' || String(raw).trim() === '--') {
+                return `<span class="authority-tag authority-none">--</span>`;
+            }
+            const parts = splitParts(raw);
+            return parts.map(renderOneToken).join(' ');
+        }
+        function updateStats() {
+            document.getElementById('total-items').textContent = DATA.length;
+            document.getElementById('total-categories').textContent = ALL_CATEGORIES.length;
+        }
+        function renderCategoryFilters() {
+            const container = document.getElementById('category-filters');
+            let html = `<button class="px-4 py-2 rounded-lg ${currentCategory === 'all' ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700'}" data-category="all">الكل</button>`;
+            for (const c of ALL_CATEGORIES) {
+                const cnt = DATA.filter(d => d.category === c).length;
+                html += `<button class="px-4 py-2 rounded-lg ${currentCategory === c ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700'}" data-category="${c}">${c} <span class="bg-gray-300 text-gray-700 rounded-full px-2 py-1 text-xs mr-1">${cnt}</span></button>`;
+            }
+            container.innerHTML = html;
+            container.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+                currentCategory = btn.getAttribute('data-category');
+                renderCategoryFilters();
+                renderTables();
+            }));
+        }
+        function getIndentLevel(serial) {
+            if (!serial) return 0;
+            const dots = (String(serial).match(/\./g) || []).length;
+            return Math.max(0, dots - 1);
+        }
+        function renderTables() {
+            tablesContainer.innerHTML = '';
+            let filtered = DATA.filter(d => {
+                const s = (searchTerm || '').toLowerCase().trim();
+                const matchesSearch = !s || d.item?.toLowerCase().includes(s) || d.serial?.toLowerCase().includes(s);
+                const matchesCat = currentCategory === 'all' || d.category === currentCategory;
+                return matchesSearch && matchesCat;
+            });
+            if (filtered.length === 0) {
+                tablesContainer.innerHTML = `<div class="text-center py-12 bg-white rounded-lg shadow-md"><i class="fas fa-search fa-3x text-gray-300 mb-4"></i><h3 class="text-xl font-medium text-gray-700">لا توجد نتائج</h3><p class="text-gray-500 mt-2">غيّر البحث أو اختر فئة أخرى.</p></div>`;
+                return;
+            }
+            const categoriesToRender = [...new Set(filtered.map(d => d.category))];
+            for (const c of categoriesToRender) {
+                const rows = filtered.filter(d => d.category === c);
+                let html = `<h2 class="text-2xl font-bold text-teal-600 mt-8 mb-4">${c}</h2>`;
+                html += `<div class="overflow-x-auto bg-white rounded-lg shadow-md mb-8">
+                    <table class="w-full text-sm text-gray-700">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+                            <tr>
+                                <th class="px-4 py-3 border serial-column">مسلسل</th>
+                                <th class="px-6 py-3 border item-column">البيان</th>
+                                ${ROLES_ORDER.map(k => `<th class="px-6 py-3 border role-column">${ROLE_NAMES[k]}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                for (const d of rows) {
+                    const lvl = getIndentLevel(d.serial);
+                    const isSearchResult = searchTerm && (d.item?.toLowerCase().includes(searchTerm) || d.serial?.toLowerCase().includes(searchTerm));
+                    html += `<tr class="bg-white border-b">
+                        <td class="border-x">${d.serial || ''}</td>
+                        <td class="border-x item-column ${isSearchResult ? 'highlight-change' : ''}">
+                            <div class="sub-indent" style="--lvl:${lvl};">${d.item || ''}</div>
+                        </td>
+                        ${ROLES_ORDER.map(roleKey => `<td class="border-l">${renderAuthorityCell(d[roleKey] || '')}</td>`).join('')}
+                    </tr>`;
+                }
+                html += `</tbody></table></div>`;
+                tablesContainer.insertAdjacentHTML('beforeend', html);
+            }
+        }
+
+        function renderAbbreviationsLegend() {
+            const container = document.getElementById('abbreviations-legend-content');
+            if (!container) return;
+            let html = '';
+            for (const key in ABBREVIATIONS_LEGEND) {
+                if (ABBREVIATIONS_LEGEND.hasOwnProperty(key)) {
+                    html += `<div class="flex items-center gap-2">
+                                <span class="font-bold text-teal-700">${key}</span>
+                                <span>-</span>
+                                <span>${ABBREVIATIONS_LEGEND[key]}</span>
+                            </div>`;
+                }
+            }
+            container.innerHTML = html;
+        }
+        
+        searchInput.addEventListener('input', e => {
+            searchTerm = (e.target.value || '').toLowerCase().trim();
+            renderTables();
+        });
+        printBtn.addEventListener('click', () => {
+            const printDateEl = document.getElementById('print-date-time');
+            if (printDateEl) {
+                const now = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                printDateEl.textContent = `تاريخ الطباعة: ${now.toLocaleDateString('ar-EG', options)} | ${now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}`;
+            }
+            window.print();
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            renderCategoryFilters();
+            renderTables();
+            renderAbbreviationsLegend();
+        });
+    </script>
+</body>
+</html>
