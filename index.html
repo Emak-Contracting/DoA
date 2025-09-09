@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* General Styles */
         body {
@@ -203,8 +204,8 @@
         }
         /* قيم مرِنة للّمسافات */
         :root {
-            --org-gap: 10px;        /* نفس الـ gap بين الأسطر في .org-chart */
-            --emp-conn-h: 10px;     /* ارتفاع وصلة الموظفين */
+            --org-gap: 10px;    /* نفس الـ gap بين الأسطر في .org-chart */
+            --emp-conn-h: 10px;   /* ارتفاع وصلة الموظفين */
         }
         /* توحيد الاسم المختلف لعنصر وصلة الموظفين */
         .employees-connection, .employees-connector {
@@ -216,7 +217,7 @@
         /* الامتداد الرأسي من منتصف الخط الأفقي نزولًا حتى وصلة الموظفين */
         .org-chart-connector .midline-down {
             position: absolute;
-            top: 25px;                   /* يطابق موضع الخط الأفقي (::after) */
+            top: 25px;            /* يطابق موضع الخط الأفقي (::after) */
             left: 50%;
             transform: translateX(-50%);
             width: 2px;
@@ -238,7 +239,7 @@
                 padding: 0;
                 box-sizing: border-box;
             }
-            header, #stats-section, #legend, #filter-section, #print-btn {
+            header, #stats-section, #legend, #filter-section {
                 display: none !important;
             }
             #print-header, #print-footer {
@@ -352,26 +353,32 @@
             #org-chart-container .org-chart {
                 gap: 5px !important;
             }
-            /* Removing the display:none rule for material icons to fix PDF export */
-            /* #org-chart-container .material-icons {
-                display: none;
-            } */
             .connection-line, .org-chart-connector::before, .org-chart-connector::after, .org-chart-vertical-line, .employees-connection {
                 background: #333 !important;
             }
             #r-and-r-table-container, .overflow-x-auto {
                 box-shadow: none !important;
             }
-
-            #abbreviations-legend {
+            
+            /* Chart printing styles */
+            .slide {
                 page-break-before: always;
+                box-shadow: none !important;
+                background: white !important;
+                padding: 0 !important;
+            }
+            .positions-grid, .chart-wrapper {
+                page-break-inside: avoid;
+            }
+            .chart-container {
+                height: 320px;
             }
 
         }
         @media print {
-          .material-icons {
-            font-family: 'Material Icons' !important;
-          }
+            .material-icons {
+                font-family: 'Material Icons' !important;
+            }
         }
         /* Roles & Responsibilities Table Styles */
         .comparison-table {
@@ -550,6 +557,305 @@
             align-items: center;
             gap: 1rem;
         }
+
+        /* Chart-specific styles */
+        .slide {
+            width: 100%; /* Make it responsive */
+            min-height: auto;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .slide-header {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .slide-title {
+            font-size: 28px; /* Adjusted font size for better fit */
+            font-weight: 800;
+            color: #2a4365;
+            position: relative;
+        }
+        .slide-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 60px;
+            height: 3px;
+            background-color: #48bb78;
+        }
+        .category-badge {
+            background-color: #48bb78;
+            color: white;
+            font-size: 18px; /* Adjusted font size */
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(72, 187, 120, 0.3);
+        }
+        .category-badge .material-icons {
+            margin-left: 8px;
+        }
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding: 0;
+        }
+        .chart-section {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .chart-container {
+            flex-grow: 1;
+            position: relative;
+            height: 380px;
+            margin-bottom: 20px;
+        }
+        .legend-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            gap: 20px;
+            flex-wrap: wrap; /* Added for responsiveness */
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+        .positions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .position-item {
+            text-align: center;
+            padding: 12px 8px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid #48bb78;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .position-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .position-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        .position-abbr {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .position-percentage {
+            font-size: 28px;
+            font-weight: 800;
+            color: #48bb78;
+        }
+        .chart-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .position-alt {
+            font-size: 16px;
+            color: #2d3748;
+            margin-top: 2px;
+            font-weight: 700;
+        }
+        .position-alt-abbr {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+        .highlight-box {
+            background-color: rgba(72, 187, 120, 0.08);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .highlight-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2a4365;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .highlight-title .material-icons {
+            margin-left: 10px;
+            color: #48bb78;
+        }
+        .highlight-content {
+            display: flex;
+            justify-content: space-between;
+        }
+        .highlight-item {
+            text-align: center;
+            flex: 1;
+        }
+        .highlight-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #48bb78;
+        }
+        .highlight-label {
+            font-size: 16px;
+            color: #4a5568;
+            margin-top: 5px;
+        }
+        .percentage-below {
+            margin-top: 10px;
+        }
+        .authority-weight {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .authority-weight-value {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+            margin-left: 5px;
+            color: white;
+        }
+        .weight-5 { background-color: #4299e1; }
+        .weight-4 { background-color: #ed64a6; }
+        .weight-3 { background-color: #f56500; }
+        .weight-2 { background-color: #48bb78; }
+        .weight-1 { background-color: #805ad5; }
+        
+        /* Add a subtle animation to the chart */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .chart-container {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        
+        /* Add a highlight for the highest percentage position */
+        .position-item.highest {
+            border-top-color: #3182ce;
+            background-color: rgba(49, 130, 206, 0.05);
+        }
+        
+        /* Add a subtle shadow to the category badge */
+        .category-badge {
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .category-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(72, 187, 120, 0.35);
+        }
+        
+        .summary-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .summary-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            width: 48%;
+        }
+        
+        .summary-icon {
+            color: #48bb78;
+            margin-left: 10px;
+        }
+        
+        .summary-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            font-weight: 700;
+            color: #2a4365;
+        }
+        
+        /* Enhanced visual styling for comprehensive slide */
+        .comprehensive-badge {
+            position: absolute;
+            top: 20px;
+            left: 70px;
+            background-color: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .comprehensive-badge .material-icons {
+            font-size: 16px;
+            margin-left: 5px;
+        }
+
+        /* Print media query for chart */
+        @media print {
+            .slide {
+                page-break-before: always;
+                box-shadow: none !important;
+                background: white !important;
+                padding: 0 !important;
+            }
+            .positions-grid {
+                page-break-inside: avoid;
+            }
+            .chart-wrapper {
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -620,6 +926,123 @@
                 </div>
             </div>
         </section>
+
+        <!-- Chart Section - Added here -->
+        <div class="slide">
+            <div class="comprehensive-badge">
+                <i class="material-icons">auto_graph</i>
+                تحليل شامل
+            </div>
+            <div class="slide-header">
+                <h1 class="slide-title">تحليل شامل للصلاحيات</h1>
+                <div class="category-badge">
+                    <i class="material-icons">analytics</i>
+                    <span id="chart-total-items-count">0</span> بند
+                </div>
+            </div>
+            <div class="slide-content">
+                <div class="summary-info">
+                    <div class="summary-item">
+                        <i class="material-icons summary-icon">category</i>
+                        <div class="summary-text">عدد الفئات: <span class="summary-value" id="chart-total-categories-count">0</span></div>
+                    </div>
+                    <div class="summary-item">
+                        <i class="material-icons summary-icon">groups</i>
+                        <div class="summary-text">عدد المناصب: <span class="summary-value">8</span></div>
+                    </div>
+                </div>
+                
+                <div class="positions-grid">
+                    <div class="position-item">
+                        <div class="position-title">المالك</div>
+                        <div class="position-abbr">O</div>
+                        <div class="position-percentage" data-percentage="14">0%</div>
+                    </div>
+                    <div class="position-item">
+                        <div class="position-title">جمعية عادية</div>
+                        <div class="position-abbr">GA</div>
+                        <div class="position-percentage" data-percentage="2">0%</div>
+                    </div>
+                    <div class="position-item">
+                        <div class="position-title">رئيس مجلس الإدارة</div>
+                        <div class="position-abbr">BC</div>
+                        <div class="position-percentage" data-percentage="20">0%</div>
+                    </div>
+                    <div class="position-item">
+                        <div class="position-title">مجلس الإدارة</div>
+                        <div class="position-abbr">BOD</div>
+                        <div class="position-percentage" data-percentage="4">0%</div>
+                    </div>
+                    <div class="position-item">
+                        <div class="position-title">المدير التنفيذي</div>
+                        <div class="position-abbr">EM</div>
+                        <div class="position-percentage" data-percentage="28">0%</div>
+                    </div>
+                    <div class="position-item">
+                        <div class="position-title">مدير الشؤون الماليةوالادارية</div>
+                        <div class="position-abbr">CFO</div>
+                        <div class="position-alt">/ المدير المالي والاداري</div>
+                        <div class="position-alt-abbr">FAM</div>
+                        <div class="position-percentage percentage-below" data-percentage="21">0%</div>
+                    </div>
+                    <div class="position-item">
+                        <div class="position-title">الشئون القانونية</div>
+                        <div class="position-abbr">LA</div>
+                        <div class="position-percentage" data-percentage="2">0%</div>
+                    </div>
+                    <div class="position-item">
+                        <div class="position-title">مدير مشروعات</div>
+                        <div class="position-abbr">PM</div>
+                        <div class="position-percentage" data-percentage="9">0%</div>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper">
+                    <div class="chart-container">
+                        <canvas id="authorityChart"></canvas>
+                    </div>
+                    
+                    <div class="legend-container">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(66, 153, 225, 0.8);"></div>
+                            <span>A: الاعتماد</span>
+                            <div class="authority-weight">
+                                <span class="authority-weight-value weight-5">5</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(128, 90, 213, 0.8);"></div>
+                            <span>R: توصية</span>
+                            <div class="authority-weight">
+                                <span class="authority-weight-value weight-1">1</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(72, 187, 120, 0.8);"></div>
+                            <span>C: موافقة مبدئية</span>
+                            <div class="authority-weight">
+                                <span class="authority-weight-value weight-2">2</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(236, 72, 153, 0.8);"></div>
+                            <span>FA: موافقة رسمية</span>
+                            <div class="authority-weight">
+                                <span class="authority-weight-value weight-4">4</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(245, 158, 11, 0.8);"></div>
+                            <span>FR: توصية نهائية</span>
+                            <div class="authority-weight">
+                                <span class="authority-weight-value weight-3">3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Roles and Responsibilities Section -->
         <section id="r-and-r-table-container" class="mt-12 p-6 bg-white rounded-lg shadow-xl">
             <div class="table-container">
@@ -742,6 +1165,7 @@
                 </div>
                 
                 <div class="flex gap-2">
+                    <!-- زر لطباعة/تحميل المستند -->
                     <button id="print-btn" class="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition flex items-center gap-2">
                         <i class="fas fa-print"></i>
                         طباعة / تحميل PDF
@@ -791,7 +1215,7 @@
             {"category":"قانونية وتنظيمية","serial":"14.1","item":"توكيلات قانونية للمحاميين في إجراءات التقاضي","owner":"","generalAssembly":"","chairman":"A","board":"C","executive_director":"R","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
             {"category":"قانونية وتنظيمية","serial":"15.1","item":"توكيلات قانونية لإنجاز معاملات تشغيلية روتينية طرف الجهات الرسمية","owner":"","generalAssembly":"","chairman":"A","board":"C","executive_director":"R","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
             {"category":"قانونية وتنظيمية","serial":"16.1","item":"الإجراءات القانونية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"قانونية وتنظيمية","serial":"16.1.1", "isSubItem": true, "item":"- ضد الشركاء / المساهمين","owner":"A","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"R(Legal)"},
+            {"category":"قانونية وتنظيمية","serial":"16.1.1", "isSubItem": true, "item":"- ضد الشركاء / المساهمين","owner":"A","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"R(Legal)","pm_dm":""},
             {"category":"قانونية وتنظيمية","serial":"16.1.2", "isSubItem": true, "item":"- ضد العملاء","owner":"","generalAssembly":"","chairman":"A","board":"C","executive_director":"R","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
             {"category":"قانونية وتنظيمية","serial":"16.1.3", "isSubItem": true, "item":"- ضد الشركات / الأفراد","owner":"","generalAssembly":"","chairman":"A","board":"C","executive_director":"R","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
             {"category":"قانونية وتنظيمية","serial":"16.1.4", "isSubItem": true, "item":"ضد كبار الموظفين (مديرو التنفيذ والشؤون المالية )","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"","cfo":"","legal_compliance":"R(Legal)","pm_dm":""},
@@ -923,7 +1347,7 @@
             {"category":"إدارة الأفراد","serial":"3.18.2", "isSubItem": true, "item":"الإدارة الفنية والاقسام التابعه لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.18.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.18.4", "isSubItem": true, "item":"حضور دورات تدريبية، ندوات ومؤتمرات (خارجية)","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
-            {"category":"إدارة الأفراد","serial":"3.19","item":"دفعة نقدية مقدمة للموظف (عند الالتحاق بالعمل)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.19","item":"دفعة نقدية مقدمة للموظف (عند الالتحاق بالعمل)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"A(CFO)","legal_compliance":"","pm_dm":""},
             {"category":"إدارة الأفراد","serial":"3.19.1", "isSubItem": true, "item":"العمالة الشهرية ( العمالة المنتظمة وعقود توريد العمالة )","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.19.2", "isSubItem": true, "item":"العمالة اليومية ( العمالة المنتظمة وعقود توريد العمالة )","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.19.3", "isSubItem": true, "item":"- العمالة المختصة بإغلاق المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
@@ -1043,13 +1467,26 @@
             "IT": "إدارة تكنولوجيا المعلومات",
             "QA": "ادارة مراقبة الجودة"
         };
-        const ALL_CATEGORIES = [...new Set(DATA.map(d => d.category))];
-        let currentCategory = 'all';
-        let searchTerm = '';
+        
+        // DOM element references
         const tablesContainer = document.getElementById('tables-container');
         const categoryFilters = document.getElementById('category-filters');
         const searchInput = document.getElementById('search-input');
         const printBtn = document.getElementById('print-btn');
+        const totalItemsEl = document.getElementById('total-items');
+        const totalCategoriesEl = document.getElementById('total-categories');
+        const abbreviationsLegendContainer = document.getElementById('abbreviations-legend-content');
+
+        // State variables
+        const ALL_CATEGORIES = [...new Set(DATA.map(d => d.category))];
+        let currentCategory = 'all';
+        let searchTerm = '';
+
+        /**
+         * Returns the appropriate Tailwind CSS class for an authority code.
+         * @param {string} code - The authority code (e.g., 'A', 'R', 'FA').
+         * @returns {string} The CSS class string.
+         */
         function badgeClass(code) {
             switch (code) {
                 case 'A': return 'authority-a';
@@ -1061,26 +1498,33 @@
             }
         }
         
+        /**
+         * Splits a raw authority string into individual parts based on delimiters.
+         * @param {string} raw - The raw string from the data.
+         * @returns {string[]} An array of cleaned up authority parts.
+         */
         function splitParts(raw) {
             if (!raw) return [];
-            const normalized = String(raw).replace(/\r/g, '').replace(/\s*\n\s*/g, '\n').trim();
-            const lines = normalized.split('\n').filter(Boolean);
-            const parts = [];
-            for (const line of lines) {
-                const chunks = line.split(/[,،;؛]+/).map(s => s.trim()).filter(Boolean);
-                parts.push(...chunks);
-            }
-            return parts;
+            const normalized = String(raw).replace(/\r/g, '').replace(/\s*\n\s*/g, ' ').trim();
+            const parts = normalized.split(/[,،;؛]+/).map(s => s.trim()).filter(Boolean);
+            return parts.length ? parts : [normalized];
         }
+
+        /**
+         * Renders a single authority token as an HTML badge with an optional subtitle.
+         * @param {string} tok - The single authority token string.
+         * @returns {string} The HTML string for the badge.
+         */
         function renderOneToken(tok) {
-            if (/توقيع\s+منفرد/.test(tok) || /توقيع\s+مزدوج/.test(tok)) {
-                return `<span class="authority-tag authority-sig">${tok}</span>`;
+            const signatureMatch = tok.match(/(توقيع\s+منفرد|توقيع\s+مزدوج)/);
+            if (signatureMatch) {
+                return `<span class="authority-tag authority-sig">${signatureMatch[0]}</span>`;
             }
-            const m = tok.match(/^\s*([A-Z]{1,2})\b/);
-            if (!m) {
+            const match = tok.match(/^\s*([A-Z]{1,2})\b/);
+            if (!match) {
                 return `<span class="authority-tag authority-none">${tok}</span>`;
             }
-            const code = m[1].toUpperCase();
+            const code = match[1].toUpperCase();
             const klass = badgeClass(code);
             const subs = [];
             tok.replace(/\(([^\)]+)\)/g, (_, g1) => {
@@ -1097,6 +1541,12 @@
             }
             return html;
         }
+
+        /**
+         * Renders a full authority cell by processing the raw string.
+         * @param {string} raw - The raw authority string.
+         * @returns {string} The complete HTML for the table cell.
+         */
         function renderAuthorityCell(raw) {
             if (!raw || String(raw).trim() === '' || String(raw).trim() === '--') {
                 return `<span class="authority-tag authority-none">--</span>`;
@@ -1104,64 +1554,83 @@
             const parts = splitParts(raw);
             return parts.map(renderOneToken).join(' ');
         }
+        
+        /**
+         * Updates the quick statistics cards with the total number of items and categories.
+         */
         function updateStats() {
-            document.getElementById('total-items').textContent = DATA.length;
-            document.getElementById('total-categories').textContent = ALL_CATEGORIES.length;
+            totalItemsEl.textContent = DATA.length;
+            totalCategoriesEl.textContent = ALL_CATEGORIES.length;
         }
+
+        /**
+         * Renders the category filter buttons dynamically.
+         */
         function renderCategoryFilters() {
-            const container = document.getElementById('category-filters');
             let html = `<button class="px-4 py-2 rounded-lg ${currentCategory === 'all' ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700'}" data-category="all">الكل</button>`;
             for (const c of ALL_CATEGORIES) {
-                const cnt = DATA.filter(d => d.category === c).length;
-                html += `<button class="px-4 py-2 rounded-lg ${currentCategory === c ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700'}" data-category="${c}">${c} <span class="bg-gray-300 text-gray-700 rounded-full px-2 py-1 text-xs mr-1">${cnt}</span></button>`;
+                const count = DATA.filter(d => d.category === c).length;
+                html += `<button class="px-4 py-2 rounded-lg ${currentCategory === c ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700'}" data-category="${c}">${c} <span class="bg-gray-300 text-gray-700 rounded-full px-2 py-1 text-xs mr-1">${count}</span></button>`;
             }
-            container.innerHTML = html;
-            container.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+            categoryFilters.innerHTML = html;
+            categoryFilters.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
                 currentCategory = btn.getAttribute('data-category');
                 renderCategoryFilters();
                 renderTables();
             }));
         }
+
+        /**
+         * Calculates the indentation level for an item based on its serial number.
+         * @param {string} serial - The serial number string.
+         * @returns {number} The indentation level.
+         */
         function getIndentLevel(serial) {
             if (!serial) return 0;
             const dots = (String(serial).match(/\./g) || []).length;
             return Math.max(0, dots - 1);
         }
+
+        /**
+         * Renders the main data tables based on the current filter and search term.
+         */
         function renderTables() {
             tablesContainer.innerHTML = '';
-            let filtered = DATA.filter(d => {
-                const s = (searchTerm || '').toLowerCase().trim();
-                const matchesSearch = !s || d.item?.toLowerCase().includes(s) || d.serial?.toLowerCase().includes(s);
-                const matchesCat = currentCategory === 'all' || d.category === currentCategory;
-                return matchesSearch && matchesCat;
+            const filteredData = DATA.filter(d => {
+                const normalizedSearchTerm = (searchTerm || '').toLowerCase().trim();
+                const matchesSearch = !normalizedSearchTerm || d.item?.toLowerCase().includes(normalizedSearchTerm) || d.serial?.toLowerCase().includes(normalizedSearchTerm);
+                const matchesCategory = currentCategory === 'all' || d.category === currentCategory;
+                return matchesSearch && matchesCategory;
             });
-            if (filtered.length === 0) {
+
+            if (filteredData.length === 0) {
                 tablesContainer.innerHTML = `<div class="text-center py-12 bg-white rounded-lg shadow-md"><i class="fas fa-search fa-3x text-gray-300 mb-4"></i><h3 class="text-xl font-medium text-gray-700">لا توجد نتائج</h3><p class="text-gray-500 mt-2">غيّر البحث أو اختر فئة أخرى.</p></div>`;
                 return;
             }
-            const categoriesToRender = [...new Set(filtered.map(d => d.category))];
-            for (const c of categoriesToRender) {
-                const rows = filtered.filter(d => d.category === c);
-                let html = `<h2 class="text-2xl font-bold text-teal-600 mt-8 mb-4">${c}</h2>`;
+
+            const categoriesToRender = [...new Set(filteredData.map(d => d.category))];
+            for (const category of categoriesToRender) {
+                const rows = filteredData.filter(d => d.category === category);
+                let html = `<h2 class="text-2xl font-bold text-teal-600 mt-8 mb-4">${category}</h2>`;
                 html += `<div class="overflow-x-auto bg-white rounded-lg shadow-md mb-8">
                     <table class="w-full text-sm text-gray-700">
                         <thead>
                             <tr>
                                 <th class="px-4 py-3 serial-column">مسلسل</th>
                                 <th class="px-6 py-3 item-column">البيان</th>
-                                ${ROLES_ORDER.map(k => `<th class="px-6 py-3 role-column">${ROLE_NAMES[k]}</th>`).join('')}
+                                ${ROLES_ORDER.map(roleKey => `<th class="px-6 py-3 role-column">${ROLE_NAMES[roleKey]}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>`;
-                for (const d of rows) {
-                    const lvl = getIndentLevel(d.serial);
-                    const isSearchResult = searchTerm && (d.item?.toLowerCase().includes(searchTerm) || d.serial?.toLowerCase().includes(searchTerm));
+                for (const item of rows) {
+                    const level = getIndentLevel(item.serial);
+                    const isSearchResult = searchTerm && (item.item?.toLowerCase().includes(searchTerm) || item.serial?.toLowerCase().includes(searchTerm));
                     html += `<tr class="bg-white">
-                        <td>${d.serial || ''}</td>
+                        <td>${item.serial || ''}</td>
                         <td class="item-column ${isSearchResult ? 'highlight-change' : ''}">
-                            <div class="sub-indent" style="--lvl:${lvl};">${d.item || ''}</div>
+                            <div class="sub-indent" style="--lvl:${level};">${item.item || ''}</div>
                         </td>
-                        ${ROLES_ORDER.map(roleKey => `<td>${renderAuthorityCell(d[roleKey] || '')}</td>`).join('')}
+                        ${ROLES_ORDER.map(roleKey => `<td>${renderAuthorityCell(item[roleKey] || '')}</td>`).join('')}
                     </tr>`;
                 }
                 html += `</tbody></table></div>`;
@@ -1169,27 +1638,30 @@
             }
         }
 
+        /**
+         * Renders the abbreviation legend for job titles.
+         */
         function renderAbbreviationsLegend() {
-            const container = document.getElementById('abbreviations-legend-content');
-            if (!container) return;
+            if (!abbreviationsLegendContainer) return;
             let html = '';
             for (const key in ABBREVIATIONS_LEGEND) {
                 if (ABBREVIATIONS_LEGEND.hasOwnProperty(key)) {
                     html += `<div class="flex items-center gap-2">
-                                
-                                <span class="font-bold text-teal-700">${key}</span>
-                                <span>-</span>
-                                <span>${ABBREVIATIONS_LEGEND[key]}</span>
-                            </div>`;
+                            <span class="font-bold text-teal-700">${key}</span>
+                            <span>-</span>
+                            <span>${ABBREVIATIONS_LEGEND[key]}</span>
+                        </div>`;
                 }
             }
-            container.innerHTML = html;
+            abbreviationsLegendContainer.innerHTML = html;
         }
-        
+
+        // Event Listeners
         searchInput.addEventListener('input', e => {
             searchTerm = (e.target.value || '').toLowerCase().trim();
             renderTables();
         });
+
         printBtn.addEventListener('click', () => {
             const printDateEl = document.getElementById('print-date-time');
             if (printDateEl) {
@@ -1199,11 +1671,119 @@
             }
             window.print();
         });
+
+        function animatePercentageNumbers() {
+            const percentageElements = document.querySelectorAll('.position-percentage');
+            percentageElements.forEach(el => {
+                const targetPercentage = parseInt(el.dataset.percentage);
+                let currentPercentage = 0;
+                const interval = setInterval(() => {
+                    if (currentPercentage < targetPercentage) {
+                        currentPercentage++;
+                        el.textContent = `${currentPercentage}%`;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 20); // Speed of animation in ms
+            });
+        }
+
+        function createChart() {
+            const ctx = document.getElementById('authorityChart').getContext('2d');
+            const positions = [
+                'المالك',
+                'جمعية عادية',
+                'رئيس مجلس الإدارة',
+                'مجلس الإدارة',
+                'المدير التنفيذي',
+                'مدير الشؤون الماليةوالادارية',
+                'الشئون القانونية',
+                'مدير مشروعات'
+            ];
+            const positionPercentages = ['14%', '2%', '20%', '4%', '28%', '21%', '2%', '9%'];
+            const weights = {
+                A: 5,
+                FA: 4,
+                FR: 3,
+                C: 2,
+                R: 1
+            };
+            const weightedData = {
+                A: [10, 0, 15, 2, 20, 15, 0, 5],
+                R: [0, 2, 0, 0, 0, 0, 2, 4],
+                C: [0, 0, 2, 0, 3, 3, 0, 0],
+                FA: [0, 0, 0, 1, 0, 0, 0, 0],
+                FR: [4, 0, 3, 1, 5, 3, 0, 0]
+            };
+            
+            Object.keys(weightedData).forEach(auth => {
+                weightedData[auth] = weightedData[auth].map(value => value * weights[auth]);
+            });
+
+            const highestIndex = 4;
+            const positionItems = document.querySelectorAll('.position-item');
+            if (positionItems[highestIndex]) {
+                positionItems[highestIndex].classList.add('highest');
+            }
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: positions.map((pos, i) => `${pos} (${positionPercentages[i]})`),
+                    datasets: [
+                        { label: 'A: الاعتماد', data: weightedData.A, backgroundColor: 'rgba(66, 153, 225, 0.8)', borderColor: 'rgba(66, 153, 225, 1)', borderWidth: 1 },
+                        { label: 'R: توصية', data: weightedData.R, backgroundColor: 'rgba(128, 90, 213, 0.8)', borderColor: 'rgba(128, 90, 213, 1)', borderWidth: 1 },
+                        { label: 'C: موافقة مبدئية', data: weightedData.C, backgroundColor: 'rgba(72, 187, 120, 0.8)', borderColor: 'rgba(72, 187, 120, 1)', borderWidth: 1 },
+                        { label: 'FA: موافقة رسمية', data: weightedData.FA, backgroundColor: 'rgba(236, 72, 153, 0.8)', borderColor: 'rgba(236, 72, 153, 1)', borderWidth: 1 },
+                        { label: 'FR: توصية نهائية', data: weightedData.FR, backgroundColor: 'rgba(245, 158, 11, 0.8)', borderColor: 'rgba(245, 158, 11, 1)', borderWidth: 1 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false }, ticks: { font: { family: 'Tajawal', size: 14 } } },
+                        y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' }, ticks: { font: { family: 'Tajawal', size: 14 } } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#2d3748',
+                            bodyColor: '#2d3748',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: { family: 'Tajawal', size: 16, weight: 'bold' },
+                            bodyFont: { family: 'Tajawal', size: 14 },
+                            callbacks: {
+                                footer: function(tooltipItems) {
+                                    let total = tooltipItems.reduce((sum, item) => sum + item.raw, 0);
+                                    const percentage = ((total / 100) * 100).toFixed(1);
+                                    return `الإجمالي: ${percentage}%`;
+                                }
+                            }
+                        }
+                    },
+                    animation: { duration: 2000, easing: 'easeOutQuart' }
+                }
+            });
+        }
+
+
+        // Initial render on page load
         document.addEventListener('DOMContentLoaded', () => {
             updateStats();
             renderCategoryFilters();
             renderTables();
             renderAbbreviationsLegend();
+            createChart();
+            animatePercentageNumbers();
+
+            // Update chart stats
+            document.getElementById('chart-total-items-count').textContent = DATA.length;
+            document.getElementById('chart-total-categories-count').textContent = ALL_CATEGORIES.length;
         });
     </script>
 </body>
