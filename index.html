@@ -136,7 +136,7 @@
         .executive-director {
             background: linear-gradient(45deg, #5DADE2, #3498DB);
         }
-        .cfao {
+        .cfo {
             background: linear-gradient(45deg, #58D68D, #27AE60);
         }
         .employees {
@@ -203,8 +203,8 @@
         }
         /* قيم مرِنة للّمسافات */
         :root {
-            --org-gap: 10px;       /* نفس الـ gap بين الأسطر في .org-chart */
-            --emp-conn-h: 10px;    /* ارتفاع وصلة الموظفين */
+            --org-gap: 10px;        /* نفس الـ gap بين الأسطر في .org-chart */
+            --emp-conn-h: 10px;     /* ارتفاع وصلة الموظفين */
         }
         /* توحيد الاسم المختلف لعنصر وصلة الموظفين */
         .employees-connection, .employees-connector {
@@ -214,10 +214,9 @@
             margin: 0 auto;
         }
         /* الامتداد الرأسي من منتصف الخط الأفقي نزولًا حتى وصلة الموظفين */
-        .org-chart-connector { position: relative; }  /* موجود لديك، إبقِه */
         .org-chart-connector .midline-down {
             position: absolute;
-            top: 25px;                 /* يطابق موضع الخط الأفقي (::after) */
+            top: 25px;                   /* يطابق موضع الخط الأفقي (::after) */
             left: 50%;
             transform: translateX(-50%);
             width: 2px;
@@ -227,8 +226,8 @@
         /* ضبط الطباعة حتى يظل الاتساق صحيحًا */
         @media print {
             :root {
-                --org-gap: 5px;         /* لأنك تقلّل الارتفاعات في الطباعة */
-                --emp-conn-h: 8px;      /* يطابق إعداداتك في قسم الطباعة */
+                --org-gap: 5px;          /* لأنك تقلّل الارتفاعات في الطباعة */
+                --emp-conn-h: 8px;       /* يطابق إعداداتك في قسم الطباعة */
             }
             .org-chart-connector .midline-down { top: 20px; }
         }
@@ -428,12 +427,6 @@
             font-size: 12px;
             margin-top: 2px;
         }
-        .task-item {
-            margin-bottom: 4px;
-            position: relative;
-            padding-right: 15px;
-            line-height: 1.5;
-        }
         .task-item:before {
             content: "•";
             position: absolute;
@@ -615,7 +608,7 @@
                         <div>(Executive Director)</div>
                     </div>
                     
-                    <div class="position cfao">
+                    <div class="position cfo">
                         <i class="material-icons position-icon">analytics</i>
                         <div>المدير المالي والإداري</div>
                         <div>(CFO)</div>
@@ -673,22 +666,6 @@
                         </tr>
                         <tr>
                             <td>
-                                <div class="position-title">العضو المنتدب (MD)</div>
-                            </td>
-                            <td>
-                                <div class="position-title">Managing Director (MD)</div>
-                            </td>
-                            <td>بين المجلس والإدارة / Between Board & Mgmt</td>
-                            <td>
-                                <div class="task-item">حلقة وصل بين المجلس والإدارة / Acts as link</div>
-                                <div class="task-item">تنفيذ قرارات المجلس / Implements board decisions</div>
-                                <div class="task-item">الإشراف على الاستراتيجية / Oversees strategic execution</div>
-                            </td>
-                            <td>صلاحيات تنفيذية واسعة / Wide executive powers (sometimes equal to CEO)</td>
-                            <td>مجلس الإدارة / Chairman / Board</td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <div class="position-title">المدير التنفيذي</div>
                             </td>
                             <td>
@@ -700,14 +677,14 @@
                                 <div class="task-item">تنفيذ الاستراتيجيات / Executes strategies in domain</div>
                             </td>
                             <td>صلاحيات داخل قطاعه فقط / Limited to department</td>
-                            <td>الرئيس التنفيذي / CEO</td>
+                            <td>رئيس مجلس الإدارة</td>
                         </tr>
                         <tr>
                             <td>
-                                <div class="position-title">المدير المالي والإداري (CFAO)</div>
+                                <div class="position-title">المدير المالي والإداري (CFO)</div>
                             </td>
                             <td>
-                                <div class="position-title">Chief Financial & Administrative Officer (CFAO)</div>
+                                <div class="position-title">Chief Financial & Administrative Officer (CFO)</div>
                             </td>
                             <td>جزء من الفريق التنفيذي / Executive Team</td>
                             <td>
@@ -719,7 +696,7 @@
                                 <div class="task-item">تنظيم السياسات / Organizes policies</div>
                             </td>
                             <td>صلاحيات مالية وإدارية / Financial & administrative authority</td>
-                            <td>الرئيس التنفيذي / CEO</td>
+                            <td>رئيس مجلس الإدارة</td>
                         </tr>
                     </tbody>
                 </table>
@@ -852,8 +829,8 @@
             {"category":"شؤون عامة","serial":"2.11","item":"إستراتيجيات الشركة","owner":"A","generalAssembly":"","chairman":"","board":"FR","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(CSO)"},
             {"category":"شؤون عامة","serial":"2.12","item":"التأمين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"شؤون عامة","serial":"2.12.1", "isSubItem": true, "item":"إصدار وثائق تأمين ذات مفاهيم جديدة أو مختلفة","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R (Ins)"},
-            {"category":"شؤون عامة","serial":"2.12.2", "isSubItem": true, "item":"إصدار وثائق تأمين، تجديدها، تعديلها أو تغيير جهة التأمين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"شؤون عامة","serial":"2.12.2.1", "isSubItem": true, "item":"إدارة / المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PM)"},
+            {"category":"شؤون عامة","serial":"2.12.2", "isSubItem": true, "item":"إصدار وثائق تأمين، تجديدها، تعديلها أو تغيير جهة التأمين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PM)"},
+            {"category":"شؤون عامة","serial":"2.12.2.1", "isSubItem": true, "item":"إدارة / المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(INS)"},
             {"category":"شؤون عامة","serial":"2.12.3", "isSubItem": true, "item":"المطالبات و التعويضات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PM/DM);C (INS)"},
             {"category":"شؤون عامة","serial":"2.13","item":"إيجارات (أراضي / سكن / مكاتب)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"شؤون عامة","serial":"2.13.1", "isSubItem": true, "item":"- أراضي / مباني المكاتب","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"R(Legal)","pm_dm":""},
@@ -955,7 +932,7 @@
             {"category":"إدارة الأفراد","serial":"3.18.1", "isSubItem": true, "item":"مديرو التنفيذ ومديرو الشئون المالية والإدارية / المدير المالى والادارى","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"إدارة الأفراد","serial":"3.18.2", "isSubItem": true, "item":"الإدارة الفنية والاقسام التابعه لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.18.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
-            {"category":"إدارة الأفراد","serial":"3.18.4", "isSubItem": true, "item":"حضور دورات تدريبية، ندوات ومؤتمرات (خارجية)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.18.4", "isSubItem": true, "item":"حضور دورات تدريبية، ندوات ومؤتمرات (خارجية)","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.19","item":"دفعة نقدية مقدمة للموظف (عند الالتحاق بالعمل)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"إدارة الأفراد","serial":"3.19.1", "isSubItem": true, "item":"العمالة الشهرية ( العمالة المنتظمة وعقود توريد العمالة )","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.19.2", "isSubItem": true, "item":"العمالة اليومية ( العمالة المنتظمة وعقود توريد العمالة )","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
@@ -1051,26 +1028,11 @@
             {"category":"مقاولي الباطن / اتفاقيات","serial":"10.2","item":"تقييم  مقاولي الباطن / مقاولين لادراجهم في قائمة مقاولى الباطن المعتمدين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"A(PCS)"},
             {"category":"مقاولي الباطن / اتفاقيات","serial":"10.3","item":"استبعاد / إعادة إدراج مقاولي الباطن / المقاولين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(PCS)"},
             {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4","item":"اتفاقيات مقاوليين الباطن والتوريد واوامر الخدمة وتعديلاتها ,اتفاقيات اعمال متنوعة اتفاقيات خدمات الاستشارات واتفاقيات الخدمات الهندسية","owner":"","generalAssembly":"","chairman":"A ما يزيد عن صلاحية المدير التنفيذي","board":"","executive_director":"A\n3million , KD","cfo":"","legal_compliance":"","pm_dm":"R(PM),R(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1", "isSubItem": true, "item":"منح وتوقيع اتفاقيات مقاولي الباطن وتعديلاتها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"A(BM)\nR(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1.1", "isSubItem": true, "item":"اعمال صغيرة (الاتفاقيات بحد اقصي 10 الاف د.ك او مايعادلها)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"A(BM)\nR(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1.2", "isSubItem": true, "item":"اعمال متوسطة اتفاقيات بما يزيد عن(10 آلاف - 100 ألف د.ك)","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"R(PM),R(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.1.3", "isSubItem": true, "item":"اعمال كبيرة اتفاقيات بما يزيد عن 100 الف د.ك","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"R(PM),R(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.2", "isSubItem": true, "item":"منح وتوقيع أمر خدمة وتعديلاته","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.2.1", "isSubItem": true, "item":"- بحد أقصى 10 آلاف د.ك","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"A(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.2.2", "isSubItem": true, "item":"- ما يزيد عن 10 آلاف د.ك (حتى 50 ألف د.ك)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"R(PCS)"},
             {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.3", "isSubItem": true, "item":"دفعات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(DM/BM);R(PCS)"},
             {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.3.1", "isSubItem": true, "item":"مرحلية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(DM/BM);R(PCS)"},
             {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.3.2", "isSubItem": true, "item":"نهائية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"A(DM/BM)\nR(PCS/FAM)"},
             {"category":"مقاولي الباطن / اتفاقيات","serial":"10.4.4", "isSubItem": true, "item":"دفعات مقدمة بدون كفالات بنكية (من خلال اتفاقيات)","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","executive_director":"A\n25.000KD","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5","item":"اتفاقيات اعمال متنوعة اتفاقيات خدمات الاستشارات واتفاقيات الخدمات الهندسية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.1", "isSubItem": true, "item":"منح وتوقيع الاتفاقيات وتعديلاتها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.1.1", "isSubItem": true, "item":"المشروعات","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)\nA(BM)\n25.000KD"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.1.2", "isSubItem": true, "item":"الادارت","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)\nA(DM)\n25.000KD"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.2", "isSubItem": true, "item":"الدفعات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.2.1", "isSubItem": true, "item":"مرحلية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"A(DM/BM)\nR(PCS/FAM)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.2.2", "isSubItem": true, "item":"نهائية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"A(DM/BM)\nR(PCS/FAM)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5.3", "isSubItem": true, "item":"دفعات مقدمة بدون كفالات بنكية من خلال الاتفاقيات","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PCS)"},
-            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.6","item":"الأعمال الداخلية غير المعتمدة للإنشاءات","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"C","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)"}
+            {"category":"مقاولي الباطن / اتفاقيات","serial":"10.5","item":"الأعمال الداخلية غير المعتمدة للإنشاءات","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"C","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS)"}
         ];
         
         const ABBREVIATIONS_LEGEND = {
@@ -1224,6 +1186,7 @@
             for (const key in ABBREVIATIONS_LEGEND) {
                 if (ABBREVIATIONS_LEGEND.hasOwnProperty(key)) {
                     html += `<div class="flex items-center gap-2">
+                                
                                 <span class="font-bold text-teal-700">${key}</span>
                                 <span>-</span>
                                 <span>${ABBREVIATIONS_LEGEND[key]}</span>
