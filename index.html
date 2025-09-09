@@ -225,17 +225,6 @@
         }
         /* ضبط الطباعة حتى يظل الاتساق صحيحًا */
         @media print {
-            :root {
-                --org-gap: 5px;          /* لأنك تقلّل الارتفاعات في الطباعة */
-                --emp-conn-h: 8px;       /* يطابق إعداداتك في قسم الطباعة */
-            }
-            .org-chart-connector .midline-down { top: 20px; }
-        }
-        .table-responsive {
-            overflow-x: auto;
-        }
-        /* Print-specific Styles */
-        @media print {
             @page {
                 size: A4 landscape;
                 margin: 1cm;
@@ -292,6 +281,7 @@
             }
             #tables-container h2 {
                 margin-top: 0;
+                page-break-before: always;
             }
             .table-responsive {
                 overflow: visible !important;
@@ -829,7 +819,7 @@
             {"category":"شؤون عامة","serial":"2.11","item":"إستراتيجيات الشركة","owner":"A","generalAssembly":"","chairman":"","board":"FR","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(CSO)"},
             {"category":"شؤون عامة","serial":"2.12","item":"التأمين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"شؤون عامة","serial":"2.12.1", "isSubItem": true, "item":"إصدار وثائق تأمين ذات مفاهيم جديدة أو مختلفة","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R (Ins)"},
-            {"category":"شؤون عامة","serial":"2.12.2", "isSubItem": true, "item":"إصدار وثائق تأمين، تجديدها، تعديلها أو تغيير جهة التأمين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PM)"},
+            {"category":"شؤون عامة","serial":"2.12.2", "isSubItem": true, "item":"إصدار وثائق تأمين، تجديدها، تعديلها أو تغيير جهة التأمين","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"شؤون عامة","serial":"2.12.2.1", "isSubItem": true, "item":"إدارة / المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(INS)"},
             {"category":"شؤون عامة","serial":"2.12.3", "isSubItem": true, "item":"المطالبات و التعويضات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(PM/DM);C (INS)"},
             {"category":"شؤون عامة","serial":"2.13","item":"إيجارات (أراضي / سكن / مكاتب)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
@@ -925,7 +915,7 @@
             {"category":"إدارة الأفراد","serial":"3.17.2.2", "isSubItem": true, "item":"مديرو الإدارات / المشروعات","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"إدارة الأفراد","serial":"3.17.2.3", "isSubItem": true, "item":"وظائف إشرافية وأخرى","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(DM)"},
             {"category":"إدارة الأفراد","serial":"3.17.2.4", "isSubItem": true, "item":"باقى وظائف الإدارة الفنية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(DM / PM)"},
-            {"category":"إدارة الأفراد","serial":"3.17.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
+            {"category":"إدارة الأفراد","serial":"3.17.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"إدارة الأفراد","serial":"3.17.3.1", "isSubItem": true, "item":"مديرو الإدارات المالية والإدارية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":""},
             {"category":"إدارة الأفراد","serial":"3.17.3.2", "isSubItem": true, "item":"باقى  وظائف الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.18","item":"ماموريات سفر","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
