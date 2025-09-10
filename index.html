@@ -34,7 +34,15 @@
         .authority-fr { background-color: #e0e7ff; color: #3730a3; }
         .authority-c { background-color: #fde68a; color: #7c2d12; }
         .authority-none { background-color: #e5e7eb; color: #4b5563; }
-        .authority-sig { background-color: #fef3c7; color: #92400e; }
+        .authority-sig { 
+            background-color: #fef3c7; 
+            color: #92400e; 
+            font-size: 0.7rem; /* Smaller font size for signature text */
+            white-space: normal; /* Changed to normal to allow wrapping */
+            word-wrap: break-word; /* Added word-wrap for long text */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .authority-sub { display: block; font-size: 0.72rem; opacity: 0.92; margin-top: 2px; }
         .highlight-change {
             background-color: #fef9c3 !important;
@@ -239,7 +247,7 @@
                 padding: 0;
                 box-sizing: border-box;
             }
-            header, #stats-section, #legend, #filter-section {
+            header, #stats-section, #legend, #filter-section, #pdf-fab {
                 display: none !important;
             }
             #print-header, #print-footer {
@@ -319,6 +327,7 @@
             .authority-tag {
                 font-size: 0.7rem;
                 padding: 0.1rem 0.4rem;
+                white-space: normal; /* Allow wrapping in print */
             }
             /* Print styles for new org chart */
             #org-chart-container .position {
@@ -367,13 +376,17 @@
                 background: white !important;
                 padding: 0 !important;
             }
-            .positions-grid, .chart-wrapper {
+            .positions-grid {
                 page-break-inside: avoid;
             }
-            .chart-container {
-                height: 320px;
+            .chart-wrapper {
+                page-break-inside: avoid;
             }
 
+            /* Fix for abbreviations legend splitting across pages */
+            #abbreviations-legend {
+                page-break-inside: avoid;
+            }
         }
         @media print {
             .material-icons {
@@ -841,6 +854,32 @@
             margin-left: 5px;
         }
 
+        /* FAB Styles */
+        .fab-pdf {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background-color: #dc2626;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+        .fab-pdf:hover {
+            background-color: #b91c1c;
+            transform: scale(1.1);
+        }
+        .fab-pdf i {
+            font-size: 1.5rem;
+        }
+
         /* Print media query for chart */
         @media print {
             .slide {
@@ -948,7 +987,7 @@
                     </div>
                     <div class="summary-item">
                         <i class="material-icons summary-icon">groups</i>
-                        <div class="summary-text">عدد المناصب: <span class="summary-value">8</span></div>
+                        <div class="summary-text">مستويات السلطة والاعتماد: <span class="summary-value">8</span></div>
                     </div>
                 </div>
                 
@@ -1104,7 +1143,6 @@
                                 <div class="task-item">إدارة الشؤون المالية / Manages finances</div>
                                 <div class="task-item">إعداد الميزانيات والتقارير / Prepares budgets & reports</div>
                                 <div class="task-item">إدارة المخاطر المالية / Manages risks</div>
-                                <div class="task-item">إدارة الشؤون الإدارية / Manages admin functions</div>
                                 <div class="task-item">دعم العمليات الداخلية / Supports internal ops</div>
                                 <div class="task-item">تنظيم السياسات / Organizes policies</div>
                             </td>
@@ -1181,6 +1219,10 @@
             <!-- Tables will be generated here by JavaScript for web view -->
         </main>
     </div>
+    <!-- Floating Action Button for PDF -->
+    <a href="https://drive.google.com/file/d/1Hw2pKn4udo2b-8m91SMBWceKk-z8PhvV/view?usp=drive_link" target="_blank" id="pdf-fab" class="fab-pdf">
+        <i class="fas fa-file-pdf"></i>
+    </a>
     <script>
         const ROLES_ORDER = ['owner', 'generalAssembly', 'chairman', 'board', 'executive_director', 'cfo', 'legal_compliance', 'pm_dm'];
         const ROLE_NAMES = {
@@ -1294,7 +1336,7 @@
             {"category":"إدارة الأفراد","serial":"3.3.1", "isSubItem": true, "item":"لأغراض العمل الرئيسية / التوظيف","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.3.2", "isSubItem": true, "item":"لأغراض لا تتعلق بالعمل (غير رسمية) او التوظيف","owner":"A","generalAssembly":"","chairman":"C","board":"","executive_director":"","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.4","item":"فيزا عمل","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
-            {"category":"إدارة الأفراد","serial":"3.5","item":"توقيع عقود التوظيف","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج معمدير الشئون المالية والإدارية","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.5","item":"توقيع عقود التوظيف","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج مع مدير الشئون المالية والإدارية / المدير المالي والاداري","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.6","item":"هيكل درجات العمالة الشهرية","owner":"A","generalAssembly":"","chairman":"C","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.7","item":"معدلات أجور العمالة اليومية (المشروعات)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.8","item":"الزيادات، الترقيات، تعديل المسميات والدرجات الوظيفية والمزايا","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
@@ -1308,8 +1350,7 @@
             {"category":"إدارة الأفراد","serial":"3.9.1.1", "isSubItem": true, "item":"-- مديرو التنفيذ ومديرو الشؤون المالية والإدارية","owner":"A","generalAssembly":"","chairman":"FR","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"إدارة الأفراد","serial":"3.9.1.2", "isSubItem": true, "item":"-- الإدارة الفنية","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"C","cfo":"","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.9.1.3", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"","cfo":"C(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
-            {"category":"إدارة الأفراد","serial":"3.9.2", "isSubItem": true, "item":"- مكافآت الأداء ربع السنوية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"إدارة الأفراد","serial":"3.9.2.1", "isSubItem": true, "item":"-- الإدارة الفنية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(DM);R(HR)"},
+            {"category":"إدارة الأفراد","serial":"3.9.2", "isSubItem": true, "item":"- مكافآت الأداء ربع السنوية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(DM);R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.9.2.2", "isSubItem": true, "item":"الإدارة المالية والإدارية والاقسام التابعة لها","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"A(CFO)","legal_compliance":"","pm_dm":"R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.10","item":"نظام الحافز النقدي للمشروعات (لزيادة إنتاجية المواقع)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS);R(HR)"},
             {"category":"إدارة الأفراد","serial":"3.11","item":"معايير نظام الحافز النقدى للمشروعات (لزيادة إنتاجية المواقع)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(PCS);R(HR)"},
@@ -1375,7 +1416,7 @@
             {"category":"الأصول الثابتة","serial":"4.2.1", "isSubItem": true, "item":"- آلات، معدات وسيارات","owner":"A","generalAssembly":"","chairman":"FR","board":"FR","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
             {"category":"الأصول الثابتة","serial":"4.2.2", "isSubItem": true, "item":"العدد اليدوية","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
             {"category":"الأصول الثابتة","serial":"4.2.3", "isSubItem": true, "item":"كبائن المكاتب","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
-            {"category":"الأصول الثابتة","serial":"4.2.4", "isSubItem": true, "item":"اثاث مكتبي/معدات واكسسوارات/حاويات تخزين","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
+            {"category":"الأصول الثابتة","serial":"4.2.4", "isSubItem": true, "item":"اثاث مكاتب /معدات واكسسوارات وحاويات تخزيين","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
             {"category":"الأصول الثابتة","serial":"4.2.5", "isSubItem": true, "item":"- معدات تكنولوجيا المعلومات","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
             {"category":"الأصول الثابتة","serial":"4.2.6", "isSubItem": true, "item":"معدات الفحص / المعايرة","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
             {"category":"الأصول الثابتة","serial":"4.2.7", "isSubItem": true, "item":"سقالات","owner":"","generalAssembly":"","chairman":"A","board":"","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(ED),R(PD)"},
@@ -1427,14 +1468,14 @@
             {"category":"التعاقدات","serial":"9.5.2", "isSubItem": true, "item":"- العروض / المناقصات (التقديم الرسمي)","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
             {"category":"التعاقدات","serial":"9.6","item":"- خطابات للجنة المناقصات المركزية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"A","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
             {"category":"التعاقدات","serial":"9.7","item":"توقيع العقود","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
-            {"category":"التعاقدات","serial":"9.7.1", "isSubItem": true, "item":"مع العملاء","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج معمدير الشئون المالية والإدارية","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
-            {"category":"التعاقدات","serial":"9.7.2", "isSubItem": true, "item":"تعديلات العقود مع العملاء","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج معمدير الشئون المالية والإدارية","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_legal_compliance":"","pm_dm":"R(Tenders)\nR(PCS)"},
+            {"category":"التعاقدات","serial":"9.7.1", "isSubItem": true, "item":"مع العملاء","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج مع مدير الشئون المالية والإدارية / المدير المالي والاداري","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.7.2", "isSubItem": true, "item":"تعديلات العقود مع العملاء","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج مع مدير الشئون المالية والإدارية / المدير المالي والاداري","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_legal_compliance":"","pm_dm":"R(Tenders)\nR(PCS)"},
             {"category":"التعاقدات","serial":"9.8","item":"الكفالات البنكية","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":""},
             {"category":"التعاقدات","serial":"9.8.1", "isSubItem": true, "item":"الكفالات البنكية العطاء الاولي","owner":"","generalAssembly":"","chairman":"","board":"","executive_director":"","cfo":"","legal_compliance":"","pm_dm":"R(Tenders)"},
-            {"category":"التعاقدات","serial":"9.8.2", "isSubItem": true, "item":"كفالات بنكية بعد مرحلة الترسية","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج معمدير الشئون المالية والإدارية","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":""},
-            {"category":"التعاقدات","serial":"9.8.2.1", "isSubItem": true, "item":"كفالات الإنجاز","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج معمدير الشئون المالية والإدارية","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
-            {"category":"التعاقدات","serial":"9.8.2.2", "isSubItem": true, "item":"كفالات الدفعات المقدمة","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج معمدير الشئون المالية والإدارية","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
-            {"category":"التعاقدات","serial":"9.8.2.3", "isSubItem": true, "item":"كفالات اخري","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج معمدير الشئون المالية والإدارية","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.8.2", "isSubItem": true, "item":"كفالات بنكية بعد مرحلة الترسية","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج مع مدير الشئون المالية والإدارية / المدير المالي والاداري","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":""},
+            {"category":"التعاقدات","serial":"9.8.2.1", "isSubItem": true, "item":"كفالات الإنجاز","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج مع مدير الشئون المالية والإدارية / المدير المالي والاداري","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.8.2.2", "isSubItem": true, "item":"كفالات الدفعات المقدمة","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج مع مدير الشئون المالية والإدارية / المدير المالي والاداري","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
+            {"category":"التعاقدات","serial":"9.8.2.3", "isSubItem": true, "item":"كفالات اخري","owner":"","generalAssembly":"","chairman":"توقيع منفرد","board":"","executive_director":"توقيع مزدوج مع مدير الشئون المالية والإدارية / المدير المالي والاداري","cfo":"توقيع مزدوج مع المدير التنفيذي","legal_compliance":"","pm_dm":"R(Tenders)"},
             {"category":"التعاقدات","serial":"9.9","item":"كفالات بنكية بدون تاريخ نهاية /مشروطة بصياغة خاصة","owner":"","generalAssembly":"","chairman":" A ما يزيد عن صلاحية المدير التنفيذي ","board":"","executive_director":"A\nKD 25.000","cfo":"R (CFO)","legal_compliance":"R(Legal)","pm_dm":"R(TENDERS)"},
             {"category":"التعاقدات","serial":"9.10","item":"شطب الديون من الدفاتر ومنح خصم على الأرصدة المدينة","owner":"A\nABOVE20%","generalAssembly":"","chairman":"A 20%","board":"R","executive_director":"R","cfo":"R(CFO)","legal_compliance":"","pm_dm":"R(DM)"},
             // مقاولي الباطن / اتفاقيات
@@ -1518,7 +1559,7 @@
         function renderOneToken(tok) {
             const signatureMatch = tok.match(/(توقيع\s+منفرد|توقيع\s+مزدوج)/);
             if (signatureMatch) {
-                return `<span class="authority-tag authority-sig">${signatureMatch[0]}</span>`;
+                return `<span class="authority-tag authority-sig">${tok}</span>`;
             }
             const match = tok.match(/^\s*([A-Z]{1,2})\b/);
             if (!match) {
